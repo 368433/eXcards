@@ -1,0 +1,42 @@
+####################################
+Code: X-XXX-X
+x-?
+xxx-numero d'etablissement
+x-secteur d'activite
+
+Le 1er chiffre (préfixe) représente la catégorie d'établissement ou d’installation.
+Les 3 chiffres du centre constituent le numéro de l'établissement ou de l’installation.
+Le dernier chiffre (suffixe) correspond à la catégorie des unités de soins de chaque établissement ou de chaque installation. (Exemple : 1 = clinique externe)
+####################################
+
+Secteur d'activite
+
+
+id,code,lieu,description
+Centres hospitaliers de soins généraux et spécialisés,0xxx3
+
+Centre de douleur chronique
+Centre des grands brûlés
+Clinique d'urgence
+Clinique externe
+Section gériatrique
+Section psychiatrique
+Unité coronarienne
+Unité d'hépatologie
+Unité de médecine familiale
+Unité de réadaptation lourde
+Unité de soins de néonatalogie
+Unité de soins généraux et spécialisés
+Unité de soins intensifs
+Unité de soins de longue durée (hébergement)
+Unité de soins de longue durée (prolongés)
+
+Clinique externe	0XXX1
+Section gériatrique	0XXX2
+Unité de soins généraux et spécialisés	0XXX3
+Unité soins longue durée (prolongés)	0XXX4
+Unité soins longue durée (hébergement)	0XXX5
+Section psychiatrique	0XXX8
+Unité coronarienne	0XXX6 ou 4XXX6
+Unité de soins intensifs	0XXX6 ou 4XXX6
+Clinique d'urgence	0XXX7

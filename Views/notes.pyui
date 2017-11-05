@@ -1,0 +1,92 @@
+[
+  {
+    "nodes" : [
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{6, 144}, {363, 409}}",
+        "class" : "TableView",
+        "attributes" : {
+          "flex" : "WH",
+          "data_source_items" : "Row 1\nRow 2\nRow 3",
+          "name" : "tableview1",
+          "frame" : "{{88, 180}, {200, 200}}",
+          "data_source_number_of_lines" : 1,
+          "class" : "TableView",
+          "background_color" : "RGBA(1.0, 1.0, 1.0, 1.0)",
+          "data_source_delete_enabled" : true,
+          "data_source_font_size" : 18,
+          "row_height" : 44,
+          "uuid" : "3E506EC3-C4BB-47A0-9D7C-4331308C618A"
+        },
+        "selected" : false
+      },
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{6, 73}, {234, 32}}",
+        "class" : "TextField",
+        "attributes" : {
+          "uuid" : "02F66C62-0AAB-42F1-B99C-38702C70E919",
+          "corner_radius" : 15,
+          "frame" : "{{88, 264}, {200, 32}}",
+          "border_color" : "RGBA(0.943396,0.943396,0.943396,1.000000)",
+          "border_width" : 2,
+          "alignment" : "left",
+          "autocorrection_type" : "default",
+          "font_name" : "<System>",
+          "spellchecking_type" : "default",
+          "class" : "TextField",
+          "name" : "textfield1",
+          "font_size" : 17
+        },
+        "selected" : false
+      },
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{255, 73}, {80, 32}}",
+        "class" : "Button",
+        "attributes" : {
+          "uuid" : "1A282431-C93D-4757-BBA7-0EDC3E1FC146",
+          "frame" : "{{148, 264}, {80, 32}}",
+          "title" : "search",
+          "class" : "Button",
+          "name" : "button1",
+          "font_size" : 15
+        },
+        "selected" : false
+      },
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{6, 6}, {363, 40}}",
+        "class" : "SegmentedControl",
+        "attributes" : {
+          "uuid" : "89209000-B9AE-4E10-BCA1-70559272D3ED",
+          "frame" : "{{128, 265}, {120, 29}}",
+          "name" : "segmentedcontrol1",
+          "class" : "SegmentedControl",
+          "segments" : "Day|Week|Month|All",
+          "flex" : "LR"
+        },
+        "selected" : false
+      }
+    ],
+    "frame" : "{{0, 0}, {375, 559}}",
+    "class" : "View",
+    "attributes" : {
+      "name" : "notes",
+      "enabled" : true,
+      "background_color" : "RGBA(1.000000,1.000000,1.000000,1.000000)",
+      "tint_color" : "RGBA(0.000000,0.478000,1.000000,1.000000)",
+      "border_color" : "RGBA(0.000000,0.000000,0.000000,1.000000)",
+      "flex" : ""
+    },
+    "selected" : false
+  }
+]

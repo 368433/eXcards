@@ -1,0 +1,177 @@
+[
+  {
+    "nodes" : [
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{46, 180}, {121, 105}}",
+        "class" : "Button",
+        "attributes" : {
+          "uuid" : "C9525ADB-9F18-4AD3-AFC1-16E3A7534EFC",
+          "font_size" : 15,
+          "corner_radius" : 50,
+          "background_color" : "RGBA(1.000000,0.966667,0.966667,1.000000)",
+          "frame" : "{{148, 264}, {80, 32}}",
+          "border_color" : "RGBA(0.976415,0.976415,0.976415,1.000000)",
+          "border_width" : 0,
+          "title" : "New Episode",
+          "action" : "load_create",
+          "class" : "Button",
+          "name" : "button1",
+          "flex" : "LRTB"
+        },
+        "selected" : false
+      },
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{214, 180}, {121, 105}}",
+        "class" : "Button",
+        "attributes" : {
+          "action" : "load_followups",
+          "flex" : "LRTB",
+          "frame" : "{{148, 264}, {80, 32}}",
+          "title" : "Follow up List",
+          "uuid" : "BE201AE0-A301-4AB9-A0F2-A704035F7F1B",
+          "class" : "Button",
+          "background_color" : "RGBA(1.000000,0.977778,0.966667,1.000000)",
+          "name" : "button2",
+          "font_size" : 15
+        },
+        "selected" : false
+      },
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{46, 422}, {121, 105}}",
+        "class" : "Button",
+        "attributes" : {
+          "action" : "load_analytics",
+          "flex" : "LRTB",
+          "frame" : "{{148, 264}, {80, 32}}",
+          "title" : "Analytics",
+          "uuid" : "3F867702-10E8-4161-B7A2-D468917FE4E6",
+          "class" : "Button",
+          "background_color" : "RGBA(1.000000,0.866667,0.866667,1.000000)",
+          "name" : "button3",
+          "font_size" : 15
+        },
+        "selected" : false
+      },
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{214, 301}, {121, 105}}",
+        "class" : "Button",
+        "attributes" : {
+          "action" : "load_reminders",
+          "flex" : "LRTB",
+          "frame" : "{{148, 264}, {80, 32}}",
+          "title" : "Reminders",
+          "class" : "Button",
+          "uuid" : "BE201AE0-A301-4AB9-A0F2-A704035F7F1B",
+          "background_color" : "RGBA(1.000000,0.955556,0.933333,1.000000)",
+          "font_size" : 15,
+          "name" : "button2"
+        },
+        "selected" : false
+      },
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{46, 301}, {121, 105}}",
+        "class" : "Button",
+        "attributes" : {
+          "action" : "load_notes",
+          "flex" : "LRTB",
+          "frame" : "{{148, 264}, {80, 32}}",
+          "title" : "Notes",
+          "class" : "Button",
+          "uuid" : "BE201AE0-A301-4AB9-A0F2-A704035F7F1B",
+          "background_color" : "RGBA(1.000000,0.933333,0.933333,1.000000)",
+          "font_size" : 15,
+          "name" : "button2"
+        },
+        "selected" : false
+      },
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{214, 422}, {121, 105}}",
+        "class" : "TextView",
+        "attributes" : {
+          "uuid" : "7A98F2ED-E3EA-46B5-A1EA-1174D3456A3F",
+          "font_size" : 12,
+          "background_color" : "RGBA(1.000000,0.911111,0.866667,1.000000)",
+          "frame" : "{{88, 180}, {200, 200}}",
+          "editable" : true,
+          "alignment" : "right",
+          "autocorrection_type" : "default",
+          "text" : "active pts:\nseen today:\nnum of rem:",
+          "font_name" : "<System>",
+          "spellchecking_type" : "default",
+          "class" : "TextView",
+          "name" : "textview1",
+          "flex" : "LRTB"
+        },
+        "selected" : false
+      },
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{28, 57}, {321, 90}}",
+        "class" : "TableView",
+        "attributes" : {
+          "flex" : "WH",
+          "data_source_items" : "Row 1",
+          "row_height" : 44,
+          "frame" : "{{88, 180}, {200, 200}}",
+          "uuid" : "7A6A3583-1A0F-42ED-854B-84D4779F2A83",
+          "data_source_number_of_lines" : 1,
+          "class" : "TableView",
+          "background_color" : "RGBA(1.0, 1.0, 1.0, 1.0)",
+          "data_source_delete_enabled" : true,
+          "data_source_font_size" : 14,
+          "name" : "tableview1"
+        },
+        "selected" : false
+      },
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{28, 17}, {321, 32}}",
+        "class" : "Label",
+        "attributes" : {
+          "font_size" : 15,
+          "frame" : "{{113, 264}, {150, 32}}",
+          "uuid" : "693F2CEA-36D8-4666-9E23-EA612AEAE007",
+          "class" : "Label",
+          "alignment" : "center",
+          "text" : "Stopwatch acts",
+          "name" : "label1",
+          "font_name" : "<System>"
+        },
+        "selected" : false
+      }
+    ],
+    "frame" : "{{0, 0}, {375, 559}}",
+    "class" : "View",
+    "attributes" : {
+      "border_color" : "RGBA(0.000000,0.000000,0.000000,1.000000)",
+      "enabled" : true,
+      "background_color" : "RGBA(1.000000,1.000000,1.000000,1.000000)",
+      "custom_class" : "",
+      "tint_color" : "RGBA(0.000000,0.478000,1.000000,1.000000)",
+      "flex" : ""
+    },
+    "selected" : false
+  }
+]

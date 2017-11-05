@@ -1,0 +1,277 @@
+[
+  {
+    "nodes" : [
+      {
+        "nodes" : [
+          {
+            "nodes" : [
+
+            ],
+            "frame" : "{{29, 6.5}, {170, 28}}",
+            "class" : "SegmentedControl",
+            "attributes" : {
+              "segments" : "HPB|ICM|PCV|Other",
+              "frame" : "{{60, 106}, {120, 29}}",
+              "flex" : "WLRTB",
+              "name" : "act_hospital",
+              "class" : "SegmentedControl",
+              "uuid" : "2ADCF0E8-4D01-4853-A7F7-8E85E123A4AE"
+            },
+            "selected" : false
+          },
+          {
+            "nodes" : [
+
+            ],
+            "frame" : "{{24, 77}, {328, 28}}",
+            "class" : "SegmentedControl",
+            "attributes" : {
+              "class" : "SegmentedControl",
+              "frame" : "{{60, 106}, {120, 29}}",
+              "uuid" : "2ADCF0E8-4D01-4853-A7F7-8E85E123A4AE",
+              "segments" : "C|VP|VC|TW|VT|PT",
+              "name" : "abbreviation",
+              "flex" : "WLRTB"
+            },
+            "selected" : false
+          },
+          {
+            "nodes" : [
+
+            ],
+            "frame" : "{{24, 113}, {328, 28}}",
+            "class" : "SegmentedControl",
+            "attributes" : {
+              "name" : "category",
+              "frame" : "{{60, 106}, {120, 29}}",
+              "flex" : "WLRTB",
+              "class" : "SegmentedControl",
+              "segments" : "ROUT|OPAT|MIEE|Exp|EcMin|EcMaj",
+              "uuid" : "2ADCF0E8-4D01-4853-A7F7-8E85E123A4AE"
+            },
+            "selected" : false
+          },
+          {
+            "nodes" : [
+
+            ],
+            "frame" : "{{205, 6.5}, {147, 28}}",
+            "class" : "SegmentedControl",
+            "attributes" : {
+              "segments" : "nil|mod18|mod19",
+              "frame" : "{{60, 106}, {120, 29}}",
+              "uuid" : "2ADCF0E8-4D01-4853-A7F7-8E85E123A4AE",
+              "name" : "act_modifier",
+              "class" : "SegmentedControl",
+              "flex" : "WLRTB"
+            },
+            "selected" : false
+          },
+          {
+            "nodes" : [
+
+            ],
+            "frame" : "{{24, 41}, {328, 28}}",
+            "class" : "SegmentedControl",
+            "attributes" : {
+              "class" : "SegmentedControl",
+              "frame" : "{{60, 106}, {120, 29}}",
+              "flex" : "WLRTB",
+              "segments" : "CPriv|CHCD|ClinEx|ICU|Urg",
+              "name" : "location",
+              "uuid" : "2ADCF0E8-4D01-4853-A7F7-8E85E123A4AE"
+            },
+            "selected" : false
+          },
+          {
+            "nodes" : [
+
+            ],
+            "frame" : "{{24, 149}, {328, 28}}",
+            "class" : "SegmentedControl",
+            "attributes" : {
+              "name" : "isolation",
+              "frame" : "{{60, 106}, {120, 29}}",
+              "uuid" : "2ADCF0E8-4D01-4853-A7F7-8E85E123A4AE",
+              "class" : "SegmentedControl",
+              "segments" : "MRSA|ERV|Inf|C.diff|TB|Autre",
+              "flex" : "WLRTB"
+            },
+            "selected" : false
+          },
+          {
+            "nodes" : [
+
+            ],
+            "frame" : "{{24, 185}, {328, 27}}",
+            "class" : "Button",
+            "attributes" : {
+              "action" : "addact",
+              "flex" : "W",
+              "frame" : "{{148, 264}, {80, 32}}",
+              "title" : "Add Act",
+              "class" : "Button",
+              "font_bold" : true,
+              "uuid" : "1B26AE24-873D-41F5-B6C4-2EFAC5844F0F",
+              "background_color" : "RGBA(0.900943,0.900943,0.900943,1.000000)",
+              "font_size" : 15,
+              "name" : "createbt"
+            },
+            "selected" : false
+          },
+          {
+            "nodes" : [
+
+            ],
+            "frame" : "{{280, 219}, {51, 31}}",
+            "class" : "Switch",
+            "attributes" : {
+              "frame" : "{{162, 264}, {51, 31}}",
+              "value" : false,
+              "class" : "Switch",
+              "name" : "switch1",
+              "uuid" : "DAD9F298-D890-42EA-908E-71120E5BE9A4"
+            },
+            "selected" : false
+          },
+          {
+            "nodes" : [
+
+            ],
+            "frame" : "{{109, 220}, {163, 31}}",
+            "class" : "Label",
+            "attributes" : {
+              "name" : "label1",
+              "frame" : "{{113, 264}, {150, 32}}",
+              "uuid" : "DC8CAC85-64CB-4BA5-A742-727F74F7CE40",
+              "class" : "Label",
+              "alignment" : "left",
+              "text" : "Episode Completed",
+              "font_size" : 18,
+              "font_name" : "<System>"
+            },
+            "selected" : false
+          },
+          {
+            "nodes" : [
+
+            ],
+            "frame" : "{{25, 257.5}, {248, 81}}",
+            "class" : "TextView",
+            "attributes" : {
+              "uuid" : "922B6EFC-842A-475D-BE85-9B6155A4B6C7",
+              "font_size" : 17,
+              "background_color" : "RGBA(1.000000,0.900000,0.900000,1.000000)",
+              "frame" : "{{88, 180}, {200, 200}}",
+              "editable" : true,
+              "alignment" : "left",
+              "autocorrection_type" : "default",
+              "text" : "Add note",
+              "font_name" : "<System>",
+              "spellchecking_type" : "default",
+              "class" : "TextView",
+              "name" : "Note",
+              "flex" : "WRTB"
+            },
+            "selected" : false
+          },
+          {
+            "nodes" : [
+
+            ],
+            "frame" : "{{24, 349.5}, {249, 98.5}}",
+            "class" : "TextView",
+            "attributes" : {
+              "uuid" : "4C1819B3-90DE-4FF7-8215-DF9FA03671BA",
+              "font_size" : 17,
+              "background_color" : "RGBA(1.000000,0.900000,0.900000,1.000000)",
+              "frame" : "{{88, 180}, {200, 200}}",
+              "editable" : true,
+              "alignment" : "left",
+              "autocorrection_type" : "default",
+              "text" : "Add reminder",
+              "font_name" : "<System>",
+              "spellchecking_type" : "default",
+              "class" : "TextView",
+              "name" : "textview1",
+              "flex" : "WHRTB"
+            },
+            "selected" : false
+          },
+          {
+            "nodes" : [
+
+            ],
+            "frame" : "{{280, 258}, {72, 65}}",
+            "class" : "Button",
+            "attributes" : {
+              "uuid" : "6B492717-C337-45D1-BD43-8547238E5039",
+              "frame" : "{{148, 264}, {80, 32}}",
+              "title" : "+note",
+              "class" : "Button",
+              "name" : "button1",
+              "font_size" : 15
+            },
+            "selected" : false
+          },
+          {
+            "nodes" : [
+
+            ],
+            "frame" : "{{281, 350}, {71, 64}}",
+            "class" : "Button",
+            "attributes" : {
+              "uuid" : "509AA928-6FE6-483F-8E96-BB082E9E5B6F",
+              "frame" : "{{148, 264}, {80, 32}}",
+              "title" : "+reminder",
+              "class" : "Button",
+              "name" : "button2",
+              "font_size" : 15
+            },
+            "selected" : false
+          }
+        ],
+        "frame" : "{{0, 0}, {375, 559}}",
+        "class" : "ScrollView",
+        "attributes" : {
+          "content_width" : 375,
+          "frame" : "{{28, 120}, {320, 320}}",
+          "content_height" : 515,
+          "class" : "ScrollView",
+          "name" : "updatescrollview",
+          "uuid" : "965E1F51-6D39-4A1E-ACC7-38A1243327A1"
+        },
+        "selected" : true
+      },
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{129, 513}, {116, 46}}",
+        "class" : "Button",
+        "attributes" : {
+          "action" : "viewfulist",
+          "frame" : "{{148, 264}, {80, 32}}",
+          "title" : "back to list",
+          "uuid" : "3336C096-89B2-4AF3-B7AB-62172D40315B",
+          "class" : "Button",
+          "background_color" : "RGBA(1.000000,0.777778,0.666667,1.000000)",
+          "name" : "button1",
+          "font_size" : 15
+        },
+        "selected" : false
+      }
+    ],
+    "frame" : "{{0, 0}, {375, 559}}",
+    "class" : "View",
+    "attributes" : {
+      "name" : "",
+      "enabled" : true,
+      "tint_color" : "RGBA(0.000000,0.478000,1.000000,1.000000)",
+      "border_color" : "RGBA(0.000000,0.000000,0.000000,1.000000)",
+      "background_color" : "RGBA(1.000000,1.000000,1.000000,1.000000)",
+      "flex" : ""
+    },
+    "selected" : false
+  }
+]

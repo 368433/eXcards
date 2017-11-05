@@ -1,0 +1,380 @@
+[
+  {
+    "nodes" : [
+      {
+        "nodes" : [
+          {
+            "nodes" : [
+              {
+                "nodes" : [
+
+                ],
+                "frame" : "{{0, 0}, {375, 241}}",
+                "class" : "TableView",
+                "attributes" : {
+                  "flex" : "WH",
+                  "data_source_items" : "",
+                  "row_height" : 44,
+                  "frame" : "{{88, 21}, {200, 200}}",
+                  "class" : "TableView",
+                  "uuid" : "4BDD3518-9436-4BA2-85A0-D0D88255F828",
+                  "background_color" : "RGBA(1.0, 1.0, 1.0, 1.0)",
+                  "data_source_number_of_lines" : 1,
+                  "data_source_delete_enabled" : true,
+                  "data_source_font_size" : 18,
+                  "name" : "tableview1"
+                },
+                "selected" : true
+              }
+            ],
+            "frame" : "{{0, 0}, {375, 241}}",
+            "class" : "View",
+            "attributes" : {
+              "class" : "View",
+              "frame" : "{{138, 230}, {100, 100}}",
+              "background_color" : "RGBA(1.000000,0.966667,0.966667,1.000000)",
+              "name" : "searchasyoutype",
+              "alpha" : 0,
+              "uuid" : "DC6D5C71-AF31-465A-97D3-31A89B43F86D"
+            },
+            "selected" : false
+          },
+          {
+            "nodes" : [
+
+            ],
+            "frame" : "{{21, 243}, {147, 32}}",
+            "class" : "TextField",
+            "attributes" : {
+              "uuid" : "BDB65279-85B0-4F5F-A2B4-1769D9FF70EB",
+              "secure" : false,
+              "frame" : "{{20, 104}, {200, 32}}",
+              "custom_attributes" : "{'delegate': MyTextFieldDelegate()}",
+              "alignment" : "left",
+              "autocorrection_type" : "no",
+              "placeholder" : "first name",
+              "font_name" : "<System>",
+              "spellchecking_type" : "no",
+              "class" : "TextField",
+              "name" : "fname",
+              "font_size" : 17
+            },
+            "selected" : false
+          },
+          {
+            "nodes" : [
+
+            ],
+            "frame" : "{{21, 283}, {147, 32}}",
+            "class" : "TextField",
+            "attributes" : {
+              "placeholder" : "RAMQ",
+              "font_name" : "<System>",
+              "frame" : "{{88, 264}, {200, 32}}",
+              "spellchecking_type" : "no",
+              "class" : "TextField",
+              "uuid" : "4EA3D75C-69A6-4448-BD19-7BD732C124BA",
+              "alignment" : "left",
+              "autocorrection_type" : "no",
+              "font_size" : 17,
+              "name" : "ramq"
+            },
+            "selected" : false
+          },
+          {
+            "nodes" : [
+
+            ],
+            "frame" : "{{189, 283}, {152, 32}}",
+            "class" : "TextField",
+            "attributes" : {
+              "placeholder" : "MRN",
+              "font_name" : "<System>",
+              "frame" : "{{88, 264}, {200, 32}}",
+              "spellchecking_type" : "no",
+              "class" : "TextField",
+              "uuid" : "16B8239E-442E-4FE1-B634-37798DC73F75",
+              "alignment" : "left",
+              "custom_attributes" : "{'delegate': MyTextFieldDelegate()}",
+              "autocorrection_type" : "no",
+              "font_size" : 17,
+              "name" : "mrn"
+            },
+            "selected" : false
+          },
+          {
+            "nodes" : [
+
+            ],
+            "frame" : "{{189, 243}, {152, 35}}",
+            "class" : "TextField",
+            "attributes" : {
+              "uuid" : "43C674C3-4220-4C61-BDBE-D431D25F0D3F",
+              "font_size" : 17,
+              "frame" : "{{88, 264}, {200, 32}}",
+              "custom_attributes" : "{'delegate': MyTextFieldDelegate()}",
+              "alignment" : "left",
+              "autocorrection_type" : "no",
+              "placeholder" : "last name",
+              "font_name" : "<System>",
+              "spellchecking_type" : "no",
+              "class" : "TextField",
+              "name" : "lname",
+              "flex" : ""
+            },
+            "selected" : false
+          },
+          {
+            "nodes" : [
+
+            ],
+            "frame" : "{{189, 323}, {152, 32}}",
+            "class" : "TextField",
+            "attributes" : {
+              "placeholder" : "Phone",
+              "font_name" : "<System>",
+              "frame" : "{{88, 264}, {200, 32}}",
+              "spellchecking_type" : "no",
+              "class" : "TextField",
+              "uuid" : "01946396-80A4-4EE6-A0F5-00971A0532A0",
+              "alignment" : "left",
+              "autocorrection_type" : "no",
+              "font_size" : 17,
+              "name" : "phone"
+            },
+            "selected" : false
+          },
+          {
+            "nodes" : [
+
+            ],
+            "frame" : "{{21, 363}, {147, 32}}",
+            "class" : "TextField",
+            "attributes" : {
+              "placeholder" : "Referring MD",
+              "font_name" : "<System>",
+              "frame" : "{{88, 264}, {200, 32}}",
+              "spellchecking_type" : "no",
+              "class" : "TextField",
+              "uuid" : "AD9639DD-2DBA-4EC4-856F-A3D4911AB004",
+              "alignment" : "left",
+              "autocorrection_type" : "no",
+              "font_size" : 17,
+              "name" : "referringmd"
+            },
+            "selected" : false
+          },
+          {
+            "nodes" : [
+
+            ],
+            "frame" : "{{189, 363}, {152, 32}}",
+            "class" : "TextField",
+            "attributes" : {
+              "placeholder" : "Dx",
+              "font_name" : "<System>",
+              "frame" : "{{88, 264}, {200, 32}}",
+              "spellchecking_type" : "no",
+              "class" : "TextField",
+              "uuid" : "DC1DC46D-6C70-435F-A346-D2A835CE9146",
+              "alignment" : "left",
+              "autocorrection_type" : "no",
+              "font_size" : 17,
+              "name" : "diagnosis"
+            },
+            "selected" : false
+          },
+          {
+            "nodes" : [
+
+            ],
+            "frame" : "{{6, 6}, {363, 35}}",
+            "class" : "SegmentedControl",
+            "attributes" : {
+              "segments" : "Clinical|Laboratory|Administrative",
+              "frame" : "{{60, 106}, {120, 29}}",
+              "flex" : "",
+              "name" : "clinlabadmin",
+              "class" : "SegmentedControl",
+              "uuid" : "2ADCF0E8-4D01-4853-A7F7-8E85E123A4AE"
+            },
+            "selected" : false
+          },
+          {
+            "nodes" : [
+
+            ],
+            "frame" : "{{6, 44}, {183, 29}}",
+            "class" : "SegmentedControl",
+            "attributes" : {
+              "class" : "SegmentedControl",
+              "frame" : "{{60, 106}, {120, 29}}",
+              "uuid" : "2ADCF0E8-4D01-4853-A7F7-8E85E123A4AE",
+              "segments" : "HPB|ICM|PCV|Other",
+              "name" : "act_hospital",
+              "flex" : ""
+            },
+            "selected" : false
+          },
+          {
+            "nodes" : [
+
+            ],
+            "frame" : "{{6, 119}, {351, 29}}",
+            "class" : "SegmentedControl",
+            "attributes" : {
+              "name" : "abbreviation",
+              "frame" : "{{60, 106}, {120, 29}}",
+              "flex" : "",
+              "class" : "SegmentedControl",
+              "segments" : "C|VP|VC|TW|VT|PT",
+              "uuid" : "2ADCF0E8-4D01-4853-A7F7-8E85E123A4AE"
+            },
+            "selected" : false
+          },
+          {
+            "nodes" : [
+
+            ],
+            "frame" : "{{6, 156}, {351, 29}}",
+            "class" : "SegmentedControl",
+            "attributes" : {
+              "segments" : "ROUT|OPAT|MIEE|Exp|EcMin|EcMaj",
+              "frame" : "{{60, 106}, {120, 29}}",
+              "uuid" : "2ADCF0E8-4D01-4853-A7F7-8E85E123A4AE",
+              "name" : "category",
+              "class" : "SegmentedControl",
+              "flex" : ""
+            },
+            "selected" : false
+          },
+          {
+            "nodes" : [
+
+            ],
+            "frame" : "{{197, 44}, {172, 29}}",
+            "class" : "SegmentedControl",
+            "attributes" : {
+              "class" : "SegmentedControl",
+              "frame" : "{{60, 106}, {120, 29}}",
+              "flex" : "",
+              "segments" : "nil|mod18|mod19",
+              "name" : "act_modifier",
+              "uuid" : "2ADCF0E8-4D01-4853-A7F7-8E85E123A4AE"
+            },
+            "selected" : false
+          },
+          {
+            "nodes" : [
+
+            ],
+            "frame" : "{{6, 82}, {351, 29}}",
+            "class" : "SegmentedControl",
+            "attributes" : {
+              "name" : "location",
+              "frame" : "{{60, 106}, {120, 29}}",
+              "uuid" : "2ADCF0E8-4D01-4853-A7F7-8E85E123A4AE",
+              "class" : "SegmentedControl",
+              "segments" : "CPriv|CHCD|ClinEx|ICU|Urg",
+              "flex" : "B"
+            },
+            "selected" : false
+          },
+          {
+            "nodes" : [
+
+            ],
+            "frame" : "{{6, 193}, {351, 29}}",
+            "class" : "SegmentedControl",
+            "attributes" : {
+              "flex" : "",
+              "segments" : "",
+              "frame" : "{{60, 106}, {120, 29}}",
+              "class" : "SegmentedControl",
+              "custom_attributes" : "{'segments': getsegments()}",
+              "uuid" : "2ADCF0E8-4D01-4853-A7F7-8E85E123A4AE",
+              "name" : "isolation"
+            },
+            "selected" : true
+          },
+          {
+            "nodes" : [
+
+            ],
+            "frame" : "{{0, 516}, {375, 43}}",
+            "class" : "Button",
+            "attributes" : {
+              "action" : "spawnevent",
+              "frame" : "{{148, 264}, {80, 32}}",
+              "title" : "Create",
+              "class" : "Button",
+              "font_bold" : true,
+              "uuid" : "1B26AE24-873D-41F5-B6C4-2EFAC5844F0F",
+              "background_color" : "RGBA(0.900943,0.900943,0.900943,1.000000)",
+              "font_size" : 15,
+              "name" : "createbt"
+            },
+            "selected" : false
+          },
+          {
+            "nodes" : [
+
+            ],
+            "frame" : "{{21, 323}, {152, 32}}",
+            "class" : "TextField",
+            "attributes" : {
+              "placeholder" : "Postal code",
+              "name" : "postalcode",
+              "frame" : "{{88, 264}, {200, 32}}",
+              "spellchecking_type" : "no",
+              "class" : "TextField",
+              "uuid" : "A16F3EE4-7B70-440D-A4CC-BC141800DF68",
+              "alignment" : "left",
+              "autocorrection_type" : "no",
+              "font_size" : 17,
+              "font_name" : "<System>"
+            },
+            "selected" : false
+          },
+          {
+            "nodes" : [
+
+            ],
+            "frame" : "{{21, 406}, {320, 102}}",
+            "class" : "DatePicker",
+            "attributes" : {
+              "name" : "datepicker1",
+              "frame" : "{{28, 172}, {320, 216}}",
+              "class" : "DatePicker",
+              "mode" : 1,
+              "uuid" : "74EB7E54-D4A2-44CA-B39C-ACFE0D2B872A"
+            },
+            "selected" : false
+          }
+        ],
+        "frame" : "{{0, 0}, {375, 559}}",
+        "class" : "ScrollView",
+        "attributes" : {
+          "uuid" : "965E1F51-6D39-4A1E-ACC7-38A1243327A1",
+          "frame" : "{{28, 120}, {320, 320}}",
+          "content_height" : 900,
+          "class" : "ScrollView",
+          "name" : "createscrollview",
+          "content_width" : 375
+        },
+        "selected" : true
+      }
+    ],
+    "frame" : "{{0, 0}, {375, 559}}",
+    "class" : "View",
+    "attributes" : {
+      "tint_color" : "RGBA(0.000000,0.478000,1.000000,1.000000)",
+      "enabled" : true,
+      "border_color" : "RGBA(0.000000,0.000000,0.000000,1.000000)",
+      "background_color" : "RGBA(1.000000,1.000000,1.000000,1.000000)",
+      "name" : "create_view",
+      "flex" : ""
+    },
+    "selected" : false
+  }
+]

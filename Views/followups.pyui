@@ -1,0 +1,92 @@
+[
+  {
+    "nodes" : [
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{49, 6}, {120, 39}}",
+        "class" : "SegmentedControl",
+        "attributes" : {
+          "segments" : "Bed|Date",
+          "frame" : "{{128, 265}, {120, 29}}",
+          "uuid" : "789F9D50-526E-46BD-8962-1F9AE667011C",
+          "name" : "segplace",
+          "class" : "SegmentedControl",
+          "flex" : "LR"
+        },
+        "selected" : false
+      },
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{204, 6}, {120, 39}}",
+        "class" : "SegmentedControl",
+        "attributes" : {
+          "flex" : "LR",
+          "segments" : "Inpt|Outpt",
+          "frame" : "{{128, 265}, {120, 29}}",
+          "custom_attributes" : "{'action':updatelist}",
+          "class" : "SegmentedControl",
+          "uuid" : "789F9D50-526E-46BD-8962-1F9AE667011C",
+          "name" : "seginoutpt"
+        },
+        "selected" : false
+      },
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{6, 53}, {363, 32}}",
+        "class" : "Label",
+        "attributes" : {
+          "font_size" : 15,
+          "frame" : "{{113, 264}, {150, 32}}",
+          "uuid" : "43F7EB37-551B-4B0A-A5C8-3BA8E362B19A",
+          "class" : "Label",
+          "alignment" : "left",
+          "text" : "   FirstName       LastName        MRN         RAMQ",
+          "name" : "label1",
+          "font_name" : "<System>"
+        },
+        "selected" : false
+      },
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{0, 87}, {375, 472}}",
+        "class" : "TableView",
+        "attributes" : {
+          "uuid" : "D5097E1B-7458-457D-BB79-271709C0BEAD",
+          "flex" : "WH",
+          "background_color" : "RGBA(1.0, 1.0, 1.0, 1.0)",
+          "frame" : "{{88, 129}, {200, 200}}",
+          "data_source_items" : "",
+          "data_source_number_of_lines" : 0,
+          "custom_attributes" : "",
+          "data_source_delete_enabled" : true,
+          "data_source_font_size" : 8,
+          "row_height" : 44,
+          "class" : "TableView",
+          "name" : "fulist",
+          "editing" : false
+        },
+        "selected" : true
+      }
+    ],
+    "frame" : "{{0, 0}, {375, 559}}",
+    "class" : "View",
+    "attributes" : {
+      "flex" : "",
+      "enabled" : true,
+      "custom_class" : "",
+      "tint_color" : "RGBA(0.000000,0.478000,1.000000,1.000000)",
+      "border_color" : "RGBA(0.000000,0.000000,0.000000,1.000000)",
+      "background_color" : "RGBA(1.000000,1.000000,1.000000,1.000000)",
+      "name" : "followups"
+    },
+    "selected" : false
+  }
+]

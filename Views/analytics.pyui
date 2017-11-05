@@ -1,0 +1,68 @@
+[
+  {
+    "nodes" : [
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{6, 6}, {363, 35}}",
+        "class" : "SegmentedControl",
+        "attributes" : {
+          "flex" : "LR",
+          "segments" : "Clinical|Finance|Intel|Optimise",
+          "frame" : "{{128, 265}, {120, 29}}",
+          "uuid" : "7D1F59C7-7276-4578-B71F-C64A43F01970",
+          "custom_attributes" : "",
+          "class" : "SegmentedControl",
+          "name" : "segmentedcontrol1"
+        },
+        "selected" : false
+      },
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{6, 86}, {363, 467}}",
+        "class" : "TextView",
+        "attributes" : {
+          "flex" : "WH",
+          "name" : "textview1",
+          "editable" : true,
+          "frame" : "{{88, 180}, {200, 200}}",
+          "spellchecking_type" : "default",
+          "class" : "TextView",
+          "uuid" : "51945A71-DBD3-415C-801D-05C22CD40E16",
+          "alignment" : "left",
+          "autocorrection_type" : "default",
+          "font_size" : 17,
+          "font_name" : "<System>"
+        },
+        "selected" : false
+      },
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{6, 72}, {369, 173}}",
+        "class" : "View",
+        "attributes" : {
+          "frame" : "{{138, 230}, {100, 100}}",
+          "class" : "View",
+          "name" : "view1",
+          "uuid" : "6A042852-420F-4D13-A39C-0D9A70850FC1"
+        },
+        "selected" : true
+      }
+    ],
+    "frame" : "{{0, 0}, {375, 559}}",
+    "class" : "View",
+    "attributes" : {
+      "enabled" : true,
+      "background_color" : "RGBA(1.000000,1.000000,1.000000,1.000000)",
+      "tint_color" : "RGBA(0.000000,0.478000,1.000000,1.000000)",
+      "border_color" : "RGBA(0.000000,0.000000,0.000000,1.000000)",
+      "flex" : ""
+    },
+    "selected" : false
+  }
+]

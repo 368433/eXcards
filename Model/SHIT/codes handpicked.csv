@@ -1,0 +1,15 @@
+lieu de dispensation: X XXX X
+HPB, general, 07533
+HPB, clin ext, 07531
+ICM, general,
+ICM, clin ext,
+
+09736: forfait de laboratoire; lieu de dispensation: 07533, secteur d'activite ???
+
+
+
+id,code,abbreviation,description,fee,location,category
+1,19578,GMESgarde micro multietablissement semaine,180,semaine,callstipend
+2,19579,GMEW,garde micro multietablissement weekend,360,weekend,callstipend
+3,19211,GUES,garde micro 1 etablissement semaine,120,semaine,callstipend
+4,19212,GUEW,garde micro 1 etablissement weekend,240,weekend,callstipend
