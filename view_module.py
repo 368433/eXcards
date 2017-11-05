@@ -75,7 +75,6 @@ class front_view(masterview):
         self.add_subview(button)
     ##
     incomplete acts list: tableview
-    pass
 
 ##################################
 # add patient view
