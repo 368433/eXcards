@@ -1,10 +1,7 @@
 import ui
+from control_module import *
 
-"""
-masterview class
-"""
 ##################################
-
 class master_view(ui.View):
 	def __init__(self):
 		# This will also be called without arguments when the view is loaded from a UI file.
@@ -67,8 +64,16 @@ class master_view(ui.View):
 
 ##################################
 # Front view
-
 class front_view(masterview):
+    #subviews:
+    ##buttons
+    new episode
+    followups
+    Reminders
+    notes
+    analytics
+    ##
+    incomplete acts list: tableview
     pass
 
 ##################################
@@ -78,21 +83,25 @@ class add_patient_view(masterview):
 
 
 ##################################
-"""
-add act view class
-"""
+# add act view class
+class add_act_view(masterview):
+    pass
 
-"""
-show followups view class
-"""
+##################################
+# show followups view class
+class show_followups_view(masterview):
+    list = ui.tableview()
 
-"""
-show reminders
-"""
+##################################
+# show reminders view class
+class show_reminders(masterview):
+    list = ui.tableview()
 
-"""
-show notes
-"""
+##################################
+# show notes view class
+class show_notes_view(masterview):
+    list = ui.tableview()
+
 
 if __name__ == '__main__':
     front_view()
