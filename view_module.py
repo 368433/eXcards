@@ -67,11 +67,12 @@ class master_view(ui.View):
 class front_view(masterview):
     #subviews:
     ##buttons
-    new episode
-    followups
-    Reminders
-    notes
-    analytics
+    buttonlist = ['New Episode', 'Followups', 'Reminders', 'Notes', 'Analytics']
+    for bu in buttonlist:
+        button = ui.Button()
+        button.name = bu
+        button.background = 'coral'
+        self.add_subview(button)
     ##
     incomplete acts list: tableview
     pass
