@@ -1,0 +1,21 @@
+id,abbreviation,description,ICDcode
+1,HIV,HIV,042.0
+2,HBV,hepatite B,070.2
+3,HCV,hepatite C,070.4
+4,transfusion,infection bacteriennes ou a rickettsies post-transfusion,999.3
+5,syphilis,syphilis,090.0
+6,prion,infection par les prions(eg: creutzfeldt-Jakob),046.1
+7,dengue,dengue,061.9
+8,Diphterie,Diphterie,032.0
+9,Fievres hemorragiques,fievres hemorragiques,065.0
+10,Palu,paludisme/malaria,084.0
+11,MRSA,MRSA,0404
+12,VRE,VRE,0405
+13,TB,TB,0407
+14,CDIFF,Clostridium difficile,0406
+15,Acineto,Acinetobacter Baumannii,0409
+16,Carba/ESBL,Bacilles gram negatif multiresistants producteurs de carbapenemases ou de ESBL,0409
+17,Chronic dialysis,chronic dialysis,V56.0
+18,BMT,greffe de moelle osseuse,V42.8
+19,SOT,greffe d'organe solide excluant cornee, peau,os ou cartilage,V42.0
+20,acute leukemia,leucemie aigue,204.0
