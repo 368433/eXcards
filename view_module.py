@@ -65,7 +65,8 @@ class master_view(ui.View):
 ##################################
 # Front view
 class front_view(masterview):
-    #subviews:
+
+	#subviews:
     ##buttons
     buttonlist = ['New Episode', 'Followups', 'Reminders', 'Notes', 'Analytics']
     for bu in buttonlist:
@@ -79,7 +80,9 @@ class front_view(masterview):
 ##################################
 # add patient view
 class add_patient_view(masterview):
-    pass
+	def __init__(self, caller):
+		masterview.__init__(self)
+		self.caller = caller
 
 
 ##################################
