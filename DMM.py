@@ -4,6 +4,7 @@ from sqlalchemy import create_engine, Table, Text, distinct
 from sqlalchemy.orm import sessionmaker, relationship, scoped_session
 from sqlalchemy.ext.declarative import declarative_base
 import time
+from cryptography.fernet import Fernet
 
 
 Base = declarative_base()
@@ -11,6 +12,11 @@ static_engine = create_engine('sqlite:///static.db', echo=False)
 dynamic_engine = create_engine('sqlite:///dynamic.db', echo=False)
 static_session = sessionmaker(bind=static_engine)
 dynamic_session = sessionmaker(bind=dynamic_engine)
+session = dynamic_session()
+
+# password key to encrypt and decrypt Patient entries
+patientpwd = b'fWB2ISaUuCJhLzZCGxGTLW2yDE2zmfPnxzWeEiN_7TM='
+f = Fernet(key)
 
 
 #####################################
@@ -61,6 +67,17 @@ class Physician(Base):
         return "<physician(id={}, license ={}, first name = {}, last name = {})>".format(self.id, self.license, self.fname, self.lname)
 
 # class ICD(Base):
+#     __tablename__="icd"
+#
+#     id = Column(Integer, Sequence('user_id_seq'), primary_key=True)
+#     code = Column(String(6))
+#     description = Column(String)
+#
+#     # RELATIONSHIPS
+#     sentinel_dx = relationship("Sentinel_Dx")
+#
+#     def __repr__(self):
+#         return "<ICD(id={}, code={}, description={})>".format(self.id, self.code, self.description)
 #     pass
 
 #####################################
@@ -97,6 +114,9 @@ class Episode_Work(Base):
     __tablename__='episode_work'
 
     id = Column(Integer, Sequence('user_id_seq'), unique=True, primary_key=True)
+    timeStart = Column(DateTime, default=datetime.utcnow(), nullable=False)
+    timeEnd = Column(DateTime)
+    lastEdit = Column(DateTime)
     #FOREIGN KEYS
     patient_id = Column(Integer, ForeignKey('patient.id'))
     #BOOLEANS
@@ -108,6 +128,13 @@ class Episode_Work(Base):
     act = relationship("Act", order_by = "desc(Act.timeStart)", back_populates='episode_work')
     patient = relationship("Patient", back_populates ="episode_work")
     sentinel_dx = relationship("Sentinel_Dx", back_populates = 'episode_work')
+
+    def __init__(self, patient):
+        self.patient_id = patient.id
+        session.add(self)
+        session.commit()
+        self.lastEdit = self.timeStart
+        session.commit()
 
     def __repr__(self):
         return "{}".format(self.id)
@@ -129,14 +156,16 @@ class Sentinel_Dx(Base):
     def __repr__(self):
         return "<Sentinel_Dx(id = '%s')>"%(self.id)
 
-# class Notes(Base):
-#     pass
-#
-# class Reminders(Base):
-#     pass
+class Notes(Base):
+    pass
 
+class Reminders(Base):
+    pass
 #####################################
 # ENCRYPTED
+# all entries written to table Patient are encrypted
+# using **password**
+# in final stages, ask for password at load time
 class Patient(Base):
     __tablename__="patient"
 
@@ -154,30 +183,23 @@ class Patient(Base):
     # reminder = relationship("reminder", back_populates="patient")
 
     def __init__(self, **kwargs):
+        # if 'fname' in dico:
+        #     self.fname = dico['fname']
         for entry in kwargs:
             if entry in self.__table__.columns.keys():
-                self.entry
+                self.__dict__[entry] = kwargs[entry]
+        session.add(self)
+        session.commit()
+
+    def get_columns(self):
+        return self.__table__.c.keys()
+
     def __str__(sefl):
         return "{} {}, MRN: {}, RAMQ: {}".format(self.fname, self.lname, self.mrn, self.ramq)
 
     def __repr__(self):
         return "{}".format(self.fname)
 
-
-#implement after ICD 11 published
-# # class ICD(Base):
-#     __tablename__="icd"
-#
-#     id = Column(Integer, Sequence('user_id_seq'), primary_key=True)
-#     code = Column(String(6))
-#     description = Column(String)
-#
-#     # RELATIONSHIPS
-#     sentinel_dx = relationship("Sentinel_Dx")
-#
-#     def __repr__(self):
-#         return "<ICD(id={}, code={}, description={})>".format(self.id, self.code, self.description)
-#
 #####################################
 
 if __name__ == '__main__':
