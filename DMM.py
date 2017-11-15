@@ -3,10 +3,34 @@ from sqlalchemy import Column, Integer, String, ForeignKey, Float, DateTime, Boo
 from sqlalchemy import create_engine, Table, Text, distinct
 from sqlalchemy.orm import sessionmaker, relationship, scoped_session
 from sqlalchemy.ext.declarative import declarative_base
-import time
 from cryptography.fernet import Fernet
+import base64, os, time
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+import time
 
+# #############################################################
+# import base64, os
+# from cryptography.hazmat.backends import default_backend
+# from cryptography.hazmat.primitives import hashes
+# from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+# #############################################################
+# # password key to encrypt and decrypt Patient entries
+# password = b'amiribrahim'
+# salt = os.urandom(16)
+# kdf = PBKDF2HMAC(
+#     algorithm = hashes.SHA256(),
+#     length = 32,
+#     salt = salt,
+#     iterations = 100000,
+#     backend = default_backend()
+# )
+# key = base64.urlsafe_b64encode(kdf.derive(password))
+# f = Fernet(key)
 
+#############################################################
+# ENGINE initialization
 Base = declarative_base()
 static_engine = create_engine('sqlite:///static.db', echo=False)
 dynamic_engine = create_engine('sqlite:///dynamic.db', echo=False)
@@ -14,6 +38,7 @@ static_session = sessionmaker(bind=static_engine)
 dynamic_session = sessionmaker(bind=dynamic_engine)
 session = dynamic_session()
 
+#############################################################
 # password key to encrypt and decrypt Patient entries
 patientpwd = b'fWB2ISaUuCJhLzZCGxGTLW2yDE2zmfPnxzWeEiN_7TM='
 f = Fernet(patientpwd)
@@ -89,14 +114,16 @@ class Act(Base):
     timeStart = Column(DateTime, default=datetime.utcnow(), nullable=False)
     timeEnd = Column(DateTime)
     bed = Column(String(5))
-    clinlabadmin = Column(Integer) #clin = 1, lab = 2, admin = 3
     subject_id = Column(Integer) # the id of a patient or null if meeting or labevent
     #BOOLEANS
     was_billed = Column(Boolean, default=False)
+    is_inpt =  Column(Boolean)
     #ForeignKey
     billingcode_id = Column(Integer, ForeignKey('billingcode.id'))
     facility_id = Column(Integer, ForeignKey('facility.id'))
     episode_work_id = Column(Integer, ForeignKey('episode_work.id'))
+    #secteur_activite_id = Column(Integer, ForeignKey('facility.id'))
+    patient_id = Column(Integer, ForeignKey('patient.id'))
     #note_id = Column(Integer, ForeignKey('notedatabase.id'))
 
     #DEFINING RELATIONSHIPS
@@ -105,6 +132,16 @@ class Act(Base):
     episode_work = relationship("Episode_Work", back_populates="act")
     #note = relationship("notedatabase", foreign_keys=[note_id])
     #reminder = relationship("reminder", back_populates="act")
+
+    def __init__(self, EOW, patient, bed, billingcode, facility, secteur, inpt, wasbilled):
+        self.episode_work_id = EOW.id
+        self.patient_id = patient.id
+        self.bed = bed
+        self.billingcode_id = billingcode.id
+        self.facility_id = facility.id
+        self.secteur_activite_id = secteur.id
+        self.is_inpt = inpt
+        self.was_billed = wasbilled
 
     def __repr__(self):
         return "<Act(id='%s', timeStart='%s', billingcode_id='%s')>"%(
@@ -120,9 +157,7 @@ class Episode_Work(Base):
     #FOREIGN KEYS
     patient_id = Column(Integer, ForeignKey('patient.id'))
     #BOOLEANS
-    is_clinical = Column(Boolean, default=False, nullable=False)
     is_inpt = Column(Boolean, default = True, nullable = False)
-    is_completed = Column(Boolean, default = False, nullable = False)
 
     #RELATIONSHIPS
     act = relationship("Act", order_by = "desc(Act.timeStart)", back_populates='episode_work')
@@ -135,6 +170,11 @@ class Episode_Work(Base):
         session.commit()
         self.lastEdit = self.timeStart
         session.commit()
+
+    # def add_act(self, patient):
+    #     act = get_act_data(self, patient)
+    #     session.add(act)
+    #     session.commit()
 
     def __repr__(self):
         return "{}".format(self.id)
@@ -182,13 +222,18 @@ class Patient(Base):
     episode_work = relationship("Episode_Work", order_by = Episode_Work.id, back_populates = "patient")
     # reminder = relationship("reminder", back_populates="patient")
 
-    def __init__(self, **kwargs):
+    def __init__(self, values):
+        # assumes values is a dictionary containing column data
         # if 'fname' in dico:
         #     self.fname = dico['fname']
-        for entry in kwargs:
-            if entry in self.__table__.columns.keys():
-                self.__dict__[entry] = f.encrypt(kwargs[entry].encode('UTF-8'))
-                #self.__dict__[entry] = kwargs[entry]
+        # for entry in kwargs:
+        #     if entry in self.__table__.columns.keys():
+        #         self.__dict__[entry] = f.encrypt(kwargs[entry].encode('UTF-8'))
+        #         #self.__dict__[entry] = kwargs[entry]
+        for k, v in values.items():
+            setattr(self, k, v)
+        session.add(self)
+        session.commit()
 
     def get_columns(self):
         return self.__table__.c.keys()
@@ -210,10 +255,29 @@ class Patient(Base):
         return "{}".format(self.fname)
 
 #####################################
-def create_patient(**dico):
-    p = Patient(**dico)
-    session.add(p)
-    session.commit()
+# def create_act(EOW, patient):
+#     act_data = get_act_data(EOW, patient)
+#     #act = Act(EOW, patient, bed, billingcode, facility, secteur, inpt, wasbilled)
+#     act = Act(**act_data) #find out how to unpack dictionary
+#     session.add(act)
+#     session.commit()
+#     return act
+#
+# def create_encounter():
+#     patient = Patient(**get_new_patient_data())
+#     EOW = Episode_Work(patient)
+#     act = create_act(**get_act_data(EOW))
+#
+# def get_new_patient_data():
+#     #return dialogs(newpatientdata)
+#     pass
+#
+# def get_act_data(EOW):
+#     pass
+#
+# # class followup_list(object):
+# #     def __init__(self, table, function):
+#         self.data = session.query(table).filter_by(function).all()
 
 def build_dummy():
     #get headings from patient table
@@ -226,7 +290,7 @@ def build_dummy():
     patients = [amir, badr,tito,rabi]
 
     for p in patients:
-        create_patient(**dict(zip(headings, p)))
+        Patient(dict(zip(headings, p)))
 
 
 #####################################
