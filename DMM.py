@@ -16,7 +16,7 @@ session = dynamic_session()
 
 # password key to encrypt and decrypt Patient entries
 patientpwd = b'fWB2ISaUuCJhLzZCGxGTLW2yDE2zmfPnxzWeEiN_7TM='
-f = Fernet(key)
+f = Fernet(patientpwd)
 
 
 #####################################
@@ -156,11 +156,11 @@ class Sentinel_Dx(Base):
     def __repr__(self):
         return "<Sentinel_Dx(id = '%s')>"%(self.id)
 
-class Notes(Base):
-    pass
-
-class Reminders(Base):
-    pass
+# class Notes(Base):
+#     pass
+#
+# class Reminders(Base):
+#     pass
 #####################################
 # ENCRYPTED
 # all entries written to table Patient are encrypted
@@ -170,13 +170,13 @@ class Patient(Base):
     __tablename__="patient"
 
     id = Column(Integer, Sequence('user_id_seq'), unique=True, primary_key=True)
-    ramq = Column(String(16), unique = True)
-    mrn = Column(String (10), unique = True)
+    ramq = Column(String)
+    mrn = Column(String)
     dob = Column(DateTime)
-    phone = Column(String(10))
-    fname = Column(String (15))
-    lname = Column(String (15))
-    postalcode = Column(String(6))
+    phone = Column(String)
+    fname = Column(String)
+    lname = Column(String)
+    postalcode = Column(String)
 
     # RELATIONSHIPS
     episode_work = relationship("Episode_Work", order_by = Episode_Work.id, back_populates = "patient")
@@ -187,12 +187,21 @@ class Patient(Base):
         #     self.fname = dico['fname']
         for entry in kwargs:
             if entry in self.__table__.columns.keys():
-                self.__dict__[entry] = kwargs[entry]
-        session.add(self)
-        session.commit()
+                self.__dict__[entry] = f.encrypt(kwargs[entry].encode('UTF-8'))
+                #self.__dict__[entry] = kwargs[entry]
 
     def get_columns(self):
         return self.__table__.c.keys()
+
+    def get_decrypted_dic(self):
+        dic = {}
+        for entry in self.__table__.columns.keys():
+            if type(self.__dict__[entry]) is not bytes:
+                dic[entry] = self.__dict__[entry]
+            else:
+                value = f.decrypt(self.__dict__[entry])
+                dic[entry] = value.decode('UTF-8')
+        return dic
 
     def __str__(sefl):
         return "{} {}, MRN: {}, RAMQ: {}".format(self.fname, self.lname, self.mrn, self.ramq)
@@ -201,7 +210,29 @@ class Patient(Base):
         return "{}".format(self.fname)
 
 #####################################
+def create_patient(**dico):
+    p = Patient(**dico)
+    session.add(p)
+    session.commit()
+
+def build_dummy():
+    #get headings from patient table
+    headings = ['fname','lname','ramq','mrn','phone']
+    #dummy patients
+    amir = ['amir','ibrahim','fsdfr23rwer','342432432', '432234234']
+    badr = ['badr','kykuyk','32432gdfgd','09893435', '564546543']
+    tito = ['tito','rweght','gdfgh87867','8768768', '676732134']
+    rabi = ['rabi','fsdfewr','hkjlh8786','43256576', '112232349']
+    patients = [amir, badr,tito,rabi]
+
+    for p in patients:
+        create_patient(**dict(zip(headings, p)))
+
+
+#####################################
 
 if __name__ == '__main__':
     Base.metadata.create_all(static_engine)
     Base.metadata.create_all(dynamic_engine)
+    # remove after testing phase
+    build_dummy()
