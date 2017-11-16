@@ -6,7 +6,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from cryptography.fernet import Fernet
 import time
 from random import randint
-import csvloader
+from csvloader import populate
 
 # #############################################################
 # import base64, os
@@ -173,8 +173,8 @@ class Episode_Work(Base):
         self.lastEdit = self.timeStart
         session.commit()
 
-    def add_act(self, patient):
-        act = Act(get_act_data(self, patient))
+    def add_act(self):
+        act = Act(get_act_data(self, self.patient_id))
         session.add(act)
         session.commit()
 
@@ -252,6 +252,10 @@ class Patient(Base):
                 dic[entry] = f.decrypt(getattr(self,entry)).decode('UTF-8')
         return dic
 
+    def add_EOW(self):
+        EOW = Episode_Work(self)
+        EOW.add_act()
+
     def __str__(sefl):
         return "{} {}, MRN: {}, RAMQ: {}".format(self.fname, self.lname, self.mrn, self.ramq)
 
@@ -264,23 +268,23 @@ class PatientLists(object):
         self.EOWs = EOWs # a list of episodes of work
 
 #####################################
-def get_act_data(EOW, patient):
-    #ultimately implement a window like dialogs that returns
-    #a dictionary of values
-    #returns a tupple of dictionaries (act, billing, facility)
-    #[bed, was_billed, is_inpt][billingdic][facilitydic][EOW][pt]
-    dic = {
-        'EOW_id':EOW.id,
-        'patient_id':patient.id,
-        'bed':random.randint(1,300),
-        'billingcode_id':4,#implement get_billingcode(billingdic)
-        'facility_id':3,#implement get_facility(dic),
-        'secteur_id':5,#implement get_secteur(),
-        'inpt':True,
-        'wasbilled':False
-    }
-    return dic
+def get_act_data(EOW, patient_id):
+    process = dialogs()
+    data['EOW_id'] = EOW.id
+    data['patient_id'] = patient_id
+    data['billingcode_id'] = get_billingcode(**process[billingsection])
+    data['facility_id'] = get_facility(**process[facility])
+    data['inpt'] = process['inpt']
+    data['secteur_id'] = get_secteur(**process[secteur])
+    data['bed'] = process['bed']
+    return data
 
+def create_new_patient():
+    return Patient(**dialogs())
+
+def create_new_EOW():
+    EOW = Episode_Work(create_new_patient())
+    EOW.add_act()
 #####################################
 # def create_act(EOW, patient):
 #     act_data = get_act_data(EOW, patient)
@@ -321,7 +325,7 @@ def build_dummy():
 
 if __name__ == '__main__':
     Base.metadata.create_all(engine)
-    csvloader.populate()
+    populate()
     #Base.metadata.create_all(dynamic_engine)
     # remove after testing phase
     build_dummy()
