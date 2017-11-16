@@ -1,4 +1,3 @@
-# need to add a leading 0 to codes that are <5 numbers long
 id,code,abbreviation,description,fee,location,category
 1,9127,VP,Visite principale,95.45,Cpriv,ROUT
 2,9165,C,Consultation (incluant la visite principale et le supplément de consultation),206.6,Cpriv,ROUT

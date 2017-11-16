@@ -8,14 +8,8 @@ from odo import discover, resource
 
 #populating the ramqcodes Table
 def populate():
-    dshape = discover(resource('csvdb/codes.csv'))
-    odo('csvdb/codes.csv', 'sqlite:///test.db::billingcode', dshape=dshape)
-
-    dshape = discover(resource('csvdb/type_of_work.csv'))
-    odo('csvdb/type_of_work.csv', 'sqlite:///test.db::type_of_work', dshape=dshape)
-
-    dshape = discover(resource('csvdb/hospitals.csv'))
-    odo('csvdb/hospitals.csv', 'sqlite:///test.db::location', dshape=dshape)
+    dshape = discover(resource('Model/Billingcodes.csv'))
+    odo('Model/Billingcodes.csv', 'sqlite:///test.db::billingcode', dshape=dshape)
 
     #populate locations
 

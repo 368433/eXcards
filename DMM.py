@@ -4,11 +4,9 @@ from sqlalchemy import create_engine, Table, Text, distinct
 from sqlalchemy.orm import sessionmaker, relationship, scoped_session
 from sqlalchemy.ext.declarative import declarative_base
 from cryptography.fernet import Fernet
-import base64, os, time
-from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 import time
+from random import randint
+import csvloader
 
 # #############################################################
 # import base64, os
@@ -32,17 +30,14 @@ import time
 #############################################################
 # ENGINE initialization
 Base = declarative_base()
-static_engine = create_engine('sqlite:///static.db', echo=False)
-dynamic_engine = create_engine('sqlite:///dynamic.db', echo=False)
-static_session = sessionmaker(bind=static_engine)
-dynamic_session = sessionmaker(bind=dynamic_engine)
-session = dynamic_session()
+engine = create_engine('sqlite:///test.db', echo=False)
+Session = sessionmaker(bind=engine)
+session = Session()
 
 #############################################################
 # password key to encrypt and decrypt Patient entries
 patientpwd = b'fWB2ISaUuCJhLzZCGxGTLW2yDE2zmfPnxzWeEiN_7TM='
 f = Fernet(patientpwd)
-
 
 #####################################
 # STATIC
@@ -57,6 +52,10 @@ class BillingCode(Base):
   location = Column(String(5))
   category = Column(String(5))
   act = relationship("Act", back_populates = "billingcode")
+
+  def get_billingcode(self, abbreviation, location, category):
+      code_id = session.query(BillingCode).filter_by(abbreviation = abbreviation,location = location, category = category)
+      return code_id.one().id
 
   def __repr__(self):
       return "<BillingCode(id='%s', abbreviation = '%s', code='%s', description='%s', fee='%s')>" % (
@@ -114,14 +113,13 @@ class Act(Base):
     timeStart = Column(DateTime, default=datetime.utcnow(), nullable=False)
     timeEnd = Column(DateTime)
     bed = Column(String(5))
-    subject_id = Column(Integer) # the id of a patient or null if meeting or labevent
     #BOOLEANS
     was_billed = Column(Boolean, default=False)
     is_inpt =  Column(Boolean)
     #ForeignKey
     billingcode_id = Column(Integer, ForeignKey('billingcode.id'))
     facility_id = Column(Integer, ForeignKey('facility.id'))
-    episode_work_id = Column(Integer, ForeignKey('episode_work.id'))
+    EOW_id = Column(Integer, ForeignKey('episode_work.id'))
     #secteur_activite_id = Column(Integer, ForeignKey('facility.id'))
     patient_id = Column(Integer, ForeignKey('patient.id'))
     #note_id = Column(Integer, ForeignKey('notedatabase.id'))
@@ -133,21 +131,25 @@ class Act(Base):
     #note = relationship("notedatabase", foreign_keys=[note_id])
     #reminder = relationship("reminder", back_populates="act")
 
-    def __init__(self, EOW, patient, bed, billingcode, facility, secteur, inpt, wasbilled):
-        self.episode_work_id = EOW.id
-        self.patient_id = patient.id
-        self.bed = bed
-        self.billingcode_id = billingcode.id
-        self.facility_id = facility.id
-        self.secteur_activite_id = secteur.id
-        self.is_inpt = inpt
-        self.was_billed = wasbilled
+    def __init__(self, values):
+        for k, v in values.items():
+            setattr(self, k, v)
+        session.add(self)
+        session.commit()
+
+    def mark_completed(self):
+        self.timeEnd = datetime.utcnow()
+        session.commit()
+
+    def is_active(self):
+        return self.timeEnd == None
 
     def __repr__(self):
         return "<Act(id='%s', timeStart='%s', billingcode_id='%s')>"%(
                 self.id, self.timeStart, self.billingcode_id)
 
 class Episode_Work(Base):
+    # equivalent to Card
     __tablename__='episode_work'
 
     id = Column(Integer, Sequence('user_id_seq'), unique=True, primary_key=True)
@@ -171,13 +173,23 @@ class Episode_Work(Base):
         self.lastEdit = self.timeStart
         session.commit()
 
-    # def add_act(self, patient):
-    #     act = get_act_data(self, patient)
-    #     session.add(act)
-    #     session.commit()
+    def add_act(self, patient):
+        act = Act(get_act_data(self, patient))
+        session.add(act)
+        session.commit()
+
+    def mark_completed(self):
+        self.timeEnd = datetime.utcnow()
+        session.commit()
+
+    def is_active(self):
+        return self.timeEnd == None
 
     def __repr__(self):
-        return "{}".format(self.id)
+        patient = self.patient.get_decrypted_dic()
+        fname, lname, MRN = patient['fname'], patient['lname'], patient['mrn']
+        last_act = self.act[-1].timeStart.strftime('%d-%b-%Y')
+        return "{0} {1}, MRN {2} \nlast visit: {3}".format(fname, lname, MRN, last_act)
 
 class Sentinel_Dx(Base):
     __tablename__="sentinel_dx"
@@ -223,15 +235,8 @@ class Patient(Base):
     # reminder = relationship("reminder", back_populates="patient")
 
     def __init__(self, values):
-        # assumes values is a dictionary containing column data
-        # if 'fname' in dico:
-        #     self.fname = dico['fname']
-        # for entry in kwargs:
-        #     if entry in self.__table__.columns.keys():
-        #         self.__dict__[entry] = f.encrypt(kwargs[entry].encode('UTF-8'))
-        #         #self.__dict__[entry] = kwargs[entry]
         for k, v in values.items():
-            setattr(self, k, v)
+            setattr(self, k, f.encrypt(v.encode('UTF-8')))
         session.add(self)
         session.commit()
 
@@ -241,11 +246,10 @@ class Patient(Base):
     def get_decrypted_dic(self):
         dic = {}
         for entry in self.__table__.columns.keys():
-            if type(self.__dict__[entry]) is not bytes:
-                dic[entry] = self.__dict__[entry]
+            if type(getattr(self, entry)) is not bytes:
+                dic[entry] = getattr(self,entry)
             else:
-                value = f.decrypt(self.__dict__[entry])
-                dic[entry] = value.decode('UTF-8')
+                dic[entry] = f.decrypt(getattr(self,entry)).decode('UTF-8')
         return dic
 
     def __str__(sefl):
@@ -253,6 +257,29 @@ class Patient(Base):
 
     def __repr__(self):
         return "{}".format(self.fname)
+
+class PatientLists(object):
+
+    def __init__(self, EOWs):
+        self.EOWs = EOWs # a list of episodes of work
+
+#####################################
+def get_act_data(EOW, patient):
+    #ultimately implement a window like dialogs that returns
+    #a dictionary of values
+    #returns a tupple of dictionaries (act, billing, facility)
+    #[bed, was_billed, is_inpt][billingdic][facilitydic][EOW][pt]
+    dic = {
+        'EOW_id':EOW.id,
+        'patient_id':patient.id,
+        'bed':random.randint(1,300),
+        'billingcode_id':4,#implement get_billingcode(billingdic)
+        'facility_id':3,#implement get_facility(dic),
+        'secteur_id':5,#implement get_secteur(),
+        'inpt':True,
+        'wasbilled':False
+    }
+    return dic
 
 #####################################
 # def create_act(EOW, patient):
@@ -270,9 +297,6 @@ class Patient(Base):
 #
 # def get_new_patient_data():
 #     #return dialogs(newpatientdata)
-#     pass
-#
-# def get_act_data(EOW):
 #     pass
 #
 # # class followup_list(object):
@@ -296,7 +320,8 @@ def build_dummy():
 #####################################
 
 if __name__ == '__main__':
-    Base.metadata.create_all(static_engine)
-    Base.metadata.create_all(dynamic_engine)
+    Base.metadata.create_all(engine)
+    csvloader.populate()
+    #Base.metadata.create_all(dynamic_engine)
     # remove after testing phase
     build_dummy()
