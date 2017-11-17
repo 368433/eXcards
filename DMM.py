@@ -3,13 +3,13 @@ from sqlalchemy import Column, Integer, String, ForeignKey, Float, DateTime, Boo
 from sqlalchemy import create_engine, Table, Text, distinct
 from sqlalchemy.orm import sessionmaker, relationship, scoped_session
 from sqlalchemy.ext.declarative import declarative_base
-from cryptography.fernet import Fernet
-import time, SCdialogs, platform
+#from cryptography.fernet import Fernet
+import time, SCdialogs, platform, ui, console
 from random import randint
-from csvloader import populate
+#from csvloader import populate
 
-if not platform.system().startswith('iP'):
-    import pandas as pd
+# if not platform.system().startswith('iP'):
+#     import pandas as pd
 # #############################################################
 # import base64, os
 # from cryptography.hazmat.backends import default_backend
@@ -38,8 +38,8 @@ session = Session()
 
 #############################################################
 # password key to encrypt and decrypt Patient entries
-patientpwd = b'fWB2ISaUuCJhLzZCGxGTLW2yDE2zmfPnxzWeEiN_7TM='
-f = Fernet(patientpwd)
+# patientpwd = b'fWB2ISaUuCJhLzZCGxGTLW2yDE2zmfPnxzWeEiN_7TM='
+# f = Fernet(patientpwd)
 
 #####################################
 # STATIC
@@ -135,7 +135,7 @@ class Act(Base):
 
     def __init__(self, values):
         for k, v in values.items():
-            if k in self.__table__.columns.keys()
+            if k in self.__table__.columns.keys():
                 setattr(self, k, v)
         session.add(self)
         session.commit()
@@ -242,7 +242,8 @@ class Patient(Base):
 
     def __init__(self, values):
         for k, v in values.items():
-            setattr(self, k, f.encrypt(v.encode('UTF-8')))
+            #setattr(self, k, f.encrypt(v.encode('UTF-8')))
+            setattr(self, k, v)
         session.add(self)
         session.commit()
 
@@ -252,10 +253,11 @@ class Patient(Base):
     def get_decrypted_dic(self):
         dic = {}
         for entry in self.__table__.columns.keys():
-            if type(getattr(self, entry)) is not bytes:
-                dic[entry] = getattr(self,entry)
-            else:
-                dic[entry] = f.decrypt(getattr(self,entry)).decode('UTF-8')
+            dic[entry] = getattr(self,entry)
+            # if type(getattr(self, entry)) is not bytes:
+            #     dic[entry] = getattr(self,entry)
+            # else:
+            #     dic[entry] = f.decrypt(getattr(self,entry)).decode('UTF-8')
         return dic
 
     def add_EOW(self):
@@ -290,7 +292,7 @@ class PatientLists(object):
         self.table.delegate = self.table.data_source = self.data
         self.table.frame = view.frame
         self.data.action = self.add_act
-        self.data.accessory_action = self.
+        self.data.accessory_action = self.accessory_patient
         self.data.edit_action = self.show_patient_overview
 
     def get_items(self):
@@ -303,9 +305,12 @@ class PatientLists(object):
     def mark_completed(self, sender):
         selected_EOW = sender.items[sender.selected_row]
         selected_EOW.mark_completed()
-        consol.hud_alert("EOW completed", 0.35)
+        console.hud_alert("EOW completed", 'success', 0.35)
         sender.items.remove(selected_act)
-
+		
+    def accessory_patient(self, sender):
+        pass
+			
     def show_patient_overview(self, sender):
         patient = sender.item[sender.selected_row].patient
         patient.display_overview()
@@ -319,7 +324,10 @@ class ActiveConsultsList(object):
         self.table.delegate = self.table.data_source = self.data
         self.table.frame = view.frame
         self.data.action = self.mark_completed
-        self.data.accessory_action = self.
+        self.data.accessory_action = self.accessory_consult
+
+    def accessory_consult(self, sender):
+        pass
 
     def get_items(self):
         return session.query(Act).filter_by(timeEnd = None).all()
@@ -327,7 +335,7 @@ class ActiveConsultsList(object):
     def mark_completed(self, sender):
         selected_act = sender.items[sender.selected_row]
         selected_act.mark_completed()
-        consol.hud_alert("Act marked completed", 0.30)
+        console.hud_alert("Act marked completed", 'success', 0.30)
         sender.items.remove(selected_act)
 
 class Cards(ui.View):
@@ -343,21 +351,24 @@ class Cards(ui.View):
         self.height = 667
         self.frame = (0, 0, self.width, self.height)
         self.elements = elements
-        spacing = 70
-        cardsize = 50
+        cardsize = 80
+        spacing = cardsize + 20
         self.background_color = 'white'
         self.scroll = ui.ScrollView()
         self.scroll.flex = 'WH'
-        self.scroll.frame = (0, 0, self.width, self.height)
-        self.scroll.content_size = (self.width, spacing*len(elements))
+        self.scroll.frame = (5, 0, self.width-10, self.height)
+        #self.scroll.content_inset = (0,5,0,5)
+        self.scroll.content_size = (self.scroll.width, spacing*len(elements))
         for n, data in enumerate(self.elements):
             card = self.make_card(data)
             if n == 0:
                 card.frame = (0, 0, self.width, cardsize)
+                card.background_color = 0.8
             else:
                 card.frame = (0, n*spacing, self.width, cardsize)
             self.scroll.add_subview(card)
         self.add_subview(self.scroll)
+
 
     def make_card(self, data):
         l = ui.Label()
@@ -438,15 +449,21 @@ def create_new_patient():
               {'type':'text','key':'lname' ,'value':'' ,'title':'Last Name'},
               {'type':'text','key':'ramq' ,'value':'' ,'title':'RAMQ'},
               {'type':'text','key':'mrn' ,'value':'' ,'title':'MRN'},
-              {'type':'date','key':'dob' ,'value':'' ,'title':'Date of birth'},
+              {'type':'date','key':'dob' ,'title':'Date of birth'},
               {'type':'number','key':'phone' ,'value':'' ,'title':'Phone'},
               {'type':'text','key':'postalcode' ,'value':'' ,'title':'Postal Code'}]
-    return Patient(**dialogs(title='New patient', fields = fields))
+    data = SCdialogs.SCform_dialog(title='New patient', fields = fields)
+    if data != None:
+        return Patient(**data)
 
 def create_new_EOW():
-    EOW = Episode_Work(create_new_patient())
-    EOW.add_act()
-
+    new_patient = create_new_patient()
+    if new_patient != None:
+    	EOW = Episode_Work(new_patient)
+    	EOW.add_act()
+    # except :
+    # 	console.hud_alert("Could not create patient", 'success', 0.5)
+    
 def get_billingcode(criteria):
     return session.query(BillingCode).filter_by(abbreviation = criteria['abbreviation'],\
                                                 location = criteria['location'],\
@@ -500,8 +517,17 @@ def build_empty_db():
         print(msg)
         print("Databases were not created and not populated. Run on Mac")
 
-
+def parsemainview(sender):
+    if sender.selected_index == 0:
+    	#console.hud_alert("this is new", 'success', 0.4)
+    	sender.selected_index = -1
+    	create_new_EOW()
 #####################################
 
 if __name__ == '__main__':
-    pass
+    v = ui.load_view('category')
+    v['segmentedcontrol1'].selected_index = -1
+    v['segmentedcontrol1'].action = parsemainview
+    v['segmentedcontrol1'].selected_index = -1
+    v.present('sheet')
+    
