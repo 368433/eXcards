@@ -151,6 +151,7 @@ class Cards(ui.View):
 #####################################
 # HELPER FUNCTIONS
 def get_act_data(EOW, patient_id):
+    actkeys = Act().__table__.column.keys()
     fields = [{'type':'segmented','key':'facility' ,'value':'HPB|ICM|PCV' ,'title':'Facility'},
               {'type':'segmented','key':'abbreviation' ,'value':'VP|C|TW|VC' ,'title':'Abbreviation'},
               {'type':'segmented','key':'location' ,'value':'CHCD|Cprive' ,'title':'Location'},
@@ -161,7 +162,7 @@ def get_act_data(EOW, patient_id):
     process = SCdialogs.SCform_dialog(title = 'New Act', fields = fields)
     process['EOW_id'] = EOW.id
     process['patient_id'] = patient_id
-    process['billingcode_id'] = get_billingcode(process).id
+    process['billingcode'] = get_act_billing(process)
     process['facility_id'] = get_facility(process).id
     #process['secteur_id'] = get_secteur(process)
     return process
