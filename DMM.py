@@ -6,7 +6,7 @@ from sqlalchemy.ext.declarative import declarative_base
 #from cryptography.fernet import Fernet
 import time, SCdialogs, platform, ui, console
 from random import randint
-#from csvloader import populate
+
 
 # if not platform.system().startswith('iP'):
 #     import pandas as pd
@@ -105,19 +105,18 @@ class Physician(Base):
     def __repr__(self):
         return "<physician(id={}, license ={}, first name = {}, last name = {})>".format(self.id, self.license, self.fname, self.lname)
 
-# class ICD(Base):
-#     __tablename__="icd"
-#
-#     id = Column(Integer, Sequence('user_id_seq'), primary_key=True)
-#     code = Column(String(6))
-#     description = Column(String)
-#
-#     # RELATIONSHIPS
-#     sentinel_dx = relationship("Sentinel_Dx")
-#
-#     def __repr__(self):
-#         return "<ICD(id={}, code={}, description={})>".format(self.id, self.code, self.description)
-#     pass
+class ICD(Base):
+    __tablename__="icd"
+
+    id = Column(Integer, Sequence('user_id_seq'), primary_key=True)
+    code = Column(String(6))
+    description = Column(String)
+
+    # RELATIONSHIPS
+    sentinel_dx = relationship("Sentinel_Dx")
+
+    def __repr__(self):
+        return "<ICD(id={}, code={}, description={})>".format(self.id, self.code, self.description)
 
 #####################################
 # DYNAMIC
@@ -144,7 +143,7 @@ class Act(Base):
     facility = relationship("Facility", back_populates="act")
     secteur = relationship("Secteur", back_populates="act")
     episode_work = relationship("Episode_Work", back_populates="act")
-    #note = relationship("notedatabase", foreign_keys=[note_id])
+    notes = relationship("Notes", order_by = "desc(Notes.dateCreated)", back_populates='Act')
     #reminder = relationship("reminder", back_populates="act")
 
     def __init__(self, values):
@@ -228,11 +227,33 @@ class Sentinel_Dx(Base):
     def __repr__(self):
         return "<Sentinel_Dx(id = '%s')>"%(self.id)
 
-# class Notes(Base):
-#     pass
-#
-# class Reminders(Base):
-#     pass
+class Notes(Base):
+    __tablename__ = 'notes'
+
+    id = Column(Integer, Sequence('user_id_seq'), primary_key=True)
+    content = Column(String)
+    image = Column(string)
+    dateCreated = Column(DateTime, default=datetime.utcnow(), nullable=False)
+    dateModified = Column(DateTime, default=datetime.utcnow(), nullable=False)
+    act_id = Column(Integer, ForeignKey('act.id'))
+
+    act = relationship("Act", back_populates ="Notes")
+
+
+class Reminders(Base):
+    __tablename__ = 'reminders'
+
+    id = Column(Integer, Sequence('user_id_seq'), primary_key=True)
+    content = Column(String)
+    dateCreated = Column(DateTime, default=datetime.utcnow(), nullable=False)
+    dateModified = Column(DateTime, default=datetime.utcnow(), nullable=False)
+
+    patient_id = Column (Integer, ForeignKey('patient.id'))
+    act_id = Column(Integer, ForeignKey('act.id'))
+
+    act = relationship("Act", back_populates ="reminders")
+    patient = relationship("Patient", back_populates ="reminders")
+
 #####################################
 # ENCRYPTED
 # all entries written to table Patient are encrypted
@@ -252,6 +273,7 @@ class Patient(Base):
 
     # RELATIONSHIPS
     episode_work = relationship("Episode_Work", order_by = Episode_Work.id, back_populates = "patient")
+    reminders = relationship("Reminders", order_by = "desc(Reminders.dateCreated)", back_populates = "patient")
     # reminder = relationship("reminder", back_populates="patient")
 
     def __init__(self, values):
