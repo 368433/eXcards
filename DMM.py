@@ -3,31 +3,9 @@ from sqlalchemy import Column, Integer, String, ForeignKey, Float, DateTime, Boo
 from sqlalchemy import create_engine, Table, Text, distinct
 from sqlalchemy.orm import sessionmaker, relationship, scoped_session
 from sqlalchemy.ext.declarative import declarative_base
-#from cryptography.fernet import Fernet
-import time, SCdialogs, platform, ui, console
+import time, platform
 from random import randint
 
-
-# if not platform.system().startswith('iP'):
-#     import pandas as pd
-# #############################################################
-# import base64, os
-# from cryptography.hazmat.backends import default_backend
-# from cryptography.hazmat.primitives import hashes
-# from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-# #############################################################
-# # password key to encrypt and decrypt Patient entries
-# password = b'amiribrahim'
-# salt = os.urandom(16)
-# kdf = PBKDF2HMAC(
-#     algorithm = hashes.SHA256(),
-#     length = 32,
-#     salt = salt,
-#     iterations = 100000,
-#     backend = default_backend()
-# )
-# key = base64.urlsafe_b64encode(kdf.derive(password))
-# f = Fernet(key)
 
 #############################################################
 # ENGINE initialization
@@ -35,11 +13,6 @@ Base = declarative_base()
 engine = create_engine('sqlite:///test.db', echo=False)
 Session = sessionmaker(bind=engine)
 session = Session()
-
-#############################################################
-# password key to encrypt and decrypt Patient entries
-# patientpwd = b'fWB2ISaUuCJhLzZCGxGTLW2yDE2zmfPnxzWeEiN_7TM='
-# f = Fernet(patientpwd)
 
 #####################################
 # STATIC
@@ -105,8 +78,8 @@ class Physician(Base):
     def __repr__(self):
         return "<physician(id={}, license ={}, first name = {}, last name = {})>".format(self.id, self.license, self.fname, self.lname)
 
-class ICD(Base):
-    __tablename__="icd"
+class ICDCode(Base):
+    __tablename__="icdcode"
 
     id = Column(Integer, Sequence('user_id_seq'), primary_key=True)
     code = Column(String(6))
@@ -215,15 +188,14 @@ class Sentinel_Dx(Base):
 
     id = Column(Integer, Sequence('user_id_seq'), primary_key=True)
     episode_work_id = Column(Integer, ForeignKey('episode_work.id'))
+    icdcode_id =  = Column(Integer, ForeignKey('icdcode.id'))
     predicted_dx = Column(String)
     final_dx = Column(String)
 
     # RELATIONSHIPS
     episode_work = relationship("Episode_Work", order_by='Episode_Work.id', back_populates = 'sentinel_dx')
+    icdcode =  = relationship("ICDCode", back_populates = 'sentinel_dx')
 
-    # implement ICD portion when ICD 11 out
-    # icd_id = Column(Integer, ForeignKey('icd.id'))
-    # icd_code = relationship("ICD", back_populates="sentinel_dx")
     def __repr__(self):
         return "<Sentinel_Dx(id = '%s')>"%(self.id)
 
@@ -238,7 +210,6 @@ class Notes(Base):
     act_id = Column(Integer, ForeignKey('act.id'))
 
     act = relationship("Act", back_populates ="Notes")
-
 
 class Reminders(Base):
     __tablename__ = 'reminders'
@@ -307,187 +278,6 @@ class Patient(Base):
         return "{}".format(self.fname)
 
 #####################################
-# VIEW CLASSES
-class PatientLists(object):
-
-    def __init__(self, view):
-        self.table= ui.TableView()
-        self.items = self.get_items()
-        self.data = ui.ListDataSource(items)
-        self.table.delegate = self.table.data_source = self.data
-        self.table.frame = view.frame
-        self.data.action = self.add_act
-        self.data.accessory_action = self.accessory_patient
-        self.data.edit_action = self.show_patient_overview
-
-    def get_items(self):
-        return session.query(Episode_Work).filter_by(timeEnd = None).all()
-
-    def add_act(self, sender):
-        #add_followup_act()
-        pass
-
-    def mark_completed(self, sender):
-        selected_EOW = sender.items[sender.selected_row]
-        selected_EOW.mark_completed()
-        console.hud_alert("EOW completed", 'success', 0.35)
-        sender.items.remove(selected_act)
-
-    def accessory_patient(self, sender):
-        pass
-
-    def show_patient_overview(self, sender):
-        patient = sender.item[sender.selected_row].patient
-        display_patient_overview(patient)
-
-class ActiveConsultsList(object):
-
-    def __init__(self, view):
-        self.table= ui.TableView()
-        self.items = self.get_items()
-        self.data = ui.ListDataSource(items)
-        self.table.delegate = self.table.data_source = self.data
-        self.table.frame = view.frame
-        self.data.action = self.mark_completed
-        self.data.accessory_action = self.accessory_consult
-
-    def accessory_consult(self, sender):
-        pass
-
-    def get_items(self):
-        return session.query(Act).filter_by(timeEnd = None).all()
-
-    def mark_completed(self, sender):
-        selected_act = sender.items[sender.selected_row]
-        selected_act.mark_completed()
-        console.hud_alert("Act marked completed", 'success', 0.30)
-        sender.items.remove(selected_act)
-
-class Cards(ui.View):
-    def __init__(self, elements):
-        # This will also be called without arguments when the view is loaded from a UI file.
-        # You don't have to call super. Note that this is called *before* the attributes
-        # defined in the UI file are set. Implement `did_load` to customize a view after
-        # it's been fully loaded from a UI file.
-
-        # assumes list_todisplay is a list of dictionary of values to be displayed
-        # as minicards
-        self.width = 375 # OPTIMIZE: set widh and height variables as global at top
-        self.height = 667
-        self.frame = (0, 0, self.width, self.height)
-        self.elements = elements
-        cardsize = 80
-        spacing = cardsize + 20
-        self.background_color = 'white'
-        self.scroll = ui.ScrollView()
-        self.scroll.flex = 'WH'
-        self.scroll.frame = (5, 0, self.width-10, self.height)
-        #self.scroll.content_inset = (0,5,0,5)
-        self.scroll.content_size = (self.scroll.width, spacing*len(elements))
-        for n, data in enumerate(self.elements):
-            card = self.make_card(data)
-            if n == 0:
-                card.frame = (0, 0, self.width, cardsize)
-                card.background_color = 0.8
-            else:
-                card.frame = (0, n*spacing, self.width, cardsize)
-            self.scroll.add_subview(card)
-        self.add_subview(self.scroll)
-
-
-    def make_card(self, data):
-        l = ui.Label()
-        l.text = data.__repr__()
-        l.background_color = 0.88
-        return l
-
-    def did_load(self):
-        # This will be called when a view has been fully loaded from a UI file.
-        pass
-
-    def will_close(self):
-        # This will be called when a presented view is about to be dismissed.
-        # You might want to save data here.
-        pass
-
-    def draw(self):
-        # This will be called whenever the view's content needs to be drawn.
-        # You can use any of the ui module's drawing functions here to render
-        # content into the view's visible rectangle.
-        # Do not call this method directly, instead, if you need your view
-        # to redraw its content, call set_needs_display().
-        # Example:
-        # path = ui.Path.oval(0, 0, self.width, self.height)
-        # ui.set_color('red')
-        # path.fill()
-        # img = ui.Image.named('ionicons-beaker-256')
-        # img.draw(0, 0, self.width, self.height)
-        pass
-
-    def layout(self):
-        # This will be called when a view is resized. You should typically set the
-        # frames of the view's subviews here, if your layout requirements cannot
-        # be fulfilled with the standard auto-resizing (flex) attribute.
-        pass
-
-    def touch_began(self, touch):
-        # Called when a touch begins.
-        pass
-
-    def touch_moved(self, touch):
-        # Called when a touch moves.
-        pass
-
-    def touch_ended(self, touch):
-        # Called when a touch ends.
-        pass
-
-    def keyboard_frame_will_change(self, frame):
-        # Called when the on-screen keyboard appears/disappears
-        # Note: The frame is in screen coordinates.
-        pass
-
-    def keyboard_frame_did_change(self, frame):
-        # Called when the on-screen keyboard appears/disappears
-        # Note: The frame is in screen coordinates.
-        pass
-
-#####################################
-def get_act_data(EOW, patient_id):
-    fields = [{'type':'segmented','key':'facility' ,'value':'HPB|ICM|PCV' ,'title':'Facility'},
-              {'type':'segmented','key':'abbreviation' ,'value':'VP|C|TW|VC' ,'title':'Abbreviation'},
-              {'type':'segmented','key':'location' ,'value':'CHCD|Cprive' ,'title':'Location'},
-              {'type':'segmented','key':'category' ,'value':'ROUT|MIEE' ,'title':'Category'},
-              {'type':'switch','key':'is_inpt' ,'value':True ,'title':'Is Inpatient'},
-              {'type':'number','key':'bed' ,'value':'' ,'title':'Bed'},
-              {'type':'text','key':'secteur' ,'value':'' ,'title':'Secteur'}]
-    process = SCdialogs.SCform_dialog(title = 'New Act', fields = fields)
-    process['EOW_id'] = EOW.id
-    process['patient_id'] = patient_id
-    process['billingcode_id'] = get_billingcode(process).id
-    process['facility_id'] = get_facility(process).id
-    #process['secteur_id'] = get_secteur(process)
-    return process
-
-def create_new_patient():
-    fields = [{'type':'text','key':'fname' ,'value':'' ,'title':'First Name'},
-              {'type':'text','key':'lname' ,'value':'' ,'title':'Last Name'},
-              {'type':'text','key':'ramq' ,'value':'' ,'title':'RAMQ'},
-              {'type':'text','key':'mrn' ,'value':'' ,'title':'MRN'},
-              {'type':'date','key':'dob' ,'title':'Date of birth'},
-              {'type':'number','key':'phone' ,'value':'' ,'title':'Phone'},
-              {'type':'text','key':'postalcode' ,'value':'' ,'title':'Postal Code'}]
-    data = SCdialogs.SCform_dialog(title='New patient', fields = fields)
-    if data != None:
-        return Patient(data)
-
-def create_new_EOW():
-    new_patient = create_new_patient()
-    if new_patient != None:
-    	EOW = Episode_Work(new_patient)
-    	EOW.add_act()
-    # except :
-    # 	console.hud_alert("Could not create patient", 'success', 0.5)
 
 def get_billingcode(criteria):
     return session.query(BillingCode).filter_by(abbreviation = criteria['abbreviation'],\
@@ -497,17 +287,6 @@ def get_billingcode(criteria):
 def get_facility(criteria):
     #may need to indicate facility as a tupple (hospital,secteur) see RAMQ
     return session.query(Facility).filter_by(abbreviation = criteria['facility']).first()
-
-def display_patient_overview(patient):
-    # dic = self.get_decrypted_dic()
-    # #can use list comprehension:
-    # #list(x.get_dic() for x in self.episode_work)
-    # #  or can map() with labmda
-    # #  getdic = lambda x:x.get_dic()
-    # #  EOW = list(map(getdic, self.episode_work))
-    # EOW = list(x.get_dic() for x in self.episode_work)
-    v = Cards([patient] + patient.episode_work)
-    v.present('sheet')
 
 #####################################
 # def create_act(EOW, patient):
@@ -544,27 +323,7 @@ def build_dummy():
     for p in patients:
         Patient(dict(zip(headings, p)))
 
-def build_empty_db():
-    try:
-        if platform.system().startswith('iP'):
-            raise ValueError("You are running on IOS")
-        df = pd.read_csv('Model/Billingcodes.csv')
-        Base.metadata.create_all(engine)
-        df.to_sql('BillingCode, engine')
-    except ValueError as msg:
-        print(msg)
-        print("Databases were not created and not populated. Run on Mac")
-
-def parsemainview(sender):
-    if sender.selected_index == 0:
-    	#console.hud_alert("this is new", 'success', 0.4)
-    	sender.selected_index = -1
-    	create_new_EOW()
 #####################################
 
 if __name__ == '__main__':
-    v = ui.load_view('category')
-    v['segmentedcontrol1'].selected_index = -1
-    v['segmentedcontrol1'].action = parsemainview
-    v['segmentedcontrol1'].selected_index = -1
-    v.present('sheet')
+    pass
