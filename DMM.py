@@ -343,8 +343,8 @@ class Cards(ui.View):
         self.height = 667
         self.frame = (0, 0, self.width, self.height)
         self.elements = elements
-        spacing = 70
-        cardsize = 50
+        cardsize = 60
+        spacing = cardsize + 20
         self.background_color = 'white'
         self.scroll = ui.ScrollView()
         self.scroll.flex = 'WH'
