@@ -278,17 +278,6 @@ class Patient(Base):
         EOW = Episode_Work(self)
         EOW.add_act()
 
-    def display_overview(self):
-        # dic = self.get_decrypted_dic()
-        # #can use list comprehension:
-        # #list(x.get_dic() for x in self.episode_work)
-        # #  or can map() with labmda
-        # #  getdic = lambda x:x.get_dic()
-        # #  EOW = list(map(getdic, self.episode_work))
-        # EOW = list(x.get_dic() for x in self.episode_work)
-        v = Cards([self] + self.episode_work)
-        v.present('sheet')
-
     def __str__(sefl):
         return "{} {}, MRN: {}, RAMQ: {}".format(self.fname, self.lname, self.mrn, self.ramq)
 
@@ -321,13 +310,13 @@ class PatientLists(object):
         selected_EOW.mark_completed()
         console.hud_alert("EOW completed", 'success', 0.35)
         sender.items.remove(selected_act)
-		
+
     def accessory_patient(self, sender):
         pass
-			
+
     def show_patient_overview(self, sender):
         patient = sender.item[sender.selected_row].patient
-        patient.display_overview()
+        display_patient_overview(patient)
 
 class ActiveConsultsList(object):
 
@@ -477,14 +466,27 @@ def create_new_EOW():
     	EOW.add_act()
     # except :
     # 	console.hud_alert("Could not create patient", 'success', 0.5)
-    
+
 def get_billingcode(criteria):
     return session.query(BillingCode).filter_by(abbreviation = criteria['abbreviation'],\
                                                 location = criteria['location'],\
                                                 category = criteria['category']).first()
+
 def get_facility(criteria):
     #may need to indicate facility as a tupple (hospital,secteur) see RAMQ
     return session.query(Facility).filter_by(abbreviation = criteria['facility']).first()
+
+def display_patient_overview(patient):
+    # dic = self.get_decrypted_dic()
+    # #can use list comprehension:
+    # #list(x.get_dic() for x in self.episode_work)
+    # #  or can map() with labmda
+    # #  getdic = lambda x:x.get_dic()
+    # #  EOW = list(map(getdic, self.episode_work))
+    # EOW = list(x.get_dic() for x in self.episode_work)
+    v = Cards([patient] + patient.episode_work)
+    v.present('sheet')
+
 #####################################
 # def create_act(EOW, patient):
 #     act_data = get_act_data(EOW, patient)
@@ -544,4 +546,3 @@ if __name__ == '__main__':
     v['segmentedcontrol1'].action = parsemainview
     v['segmentedcontrol1'].selected_index = -1
     v.present('sheet')
-    
