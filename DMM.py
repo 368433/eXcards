@@ -68,6 +68,7 @@ class Facility(Base):
 
     id = Column(Integer, Sequence('user_id_seq'), unique=True, primary_key=True)
     name = Column(String)
+    abbreviation = Column(String)
     postal_code = Column(String(6))
     phone = Column(String(10))
     address =  Column(String)
@@ -76,6 +77,18 @@ class Facility(Base):
 
     def __repr__(self):
         return "<Facility(id='%s', name = '%s', phone='%s')>" % (self.id, self.name, self.phone) # done
+
+class Secteur(Base):
+    __tablename__="secteur"
+
+    id = Column(Integer, Sequence('user_id_seq'), unique=True, primary_key=True)
+    name = Column(String)
+    abbreviation = Column(String)
+
+    act = relationship("Act", back_populates="secteur")
+
+    def __repr__(self):
+        return "<Secteur(id='%s', name = '%s', abbr='%s')>" % (self.id, self.name, self.abbreviation)
 
 class Physician(Base):
     __tablename__="physician"
@@ -122,13 +135,14 @@ class Act(Base):
     billingcode_id = Column(Integer, ForeignKey('billingcode.id'))
     facility_id = Column(Integer, ForeignKey('facility.id'))
     EOW_id = Column(Integer, ForeignKey('episode_work.id'))
-    #secteur_activite_id = Column(Integer, ForeignKey('facility.id'))
+    secteur_activite_id = Column(Integer, ForeignKey('secteur.id'))
     patient_id = Column(Integer, ForeignKey('patient.id'))
     #note_id = Column(Integer, ForeignKey('notedatabase.id'))
 
     #DEFINING RELATIONSHIPS
     billingcode = relationship("BillingCode" , back_populates="act")
     facility = relationship("Facility", back_populates="act")
+    secteur = relationship("Secteur", back_populates="act")
     episode_work = relationship("Episode_Work", back_populates="act")
     #note = relationship("notedatabase", foreign_keys=[note_id])
     #reminder = relationship("reminder", back_populates="act")
@@ -351,7 +365,7 @@ class Cards(ui.View):
         self.height = 667
         self.frame = (0, 0, self.width, self.height)
         self.elements = elements
-        cardsize = 60
+        cardsize = 80
         spacing = cardsize + 20
         self.background_color = 'white'
         self.scroll = ui.ScrollView()
@@ -454,7 +468,7 @@ def create_new_patient():
               {'type':'text','key':'postalcode' ,'value':'' ,'title':'Postal Code'}]
     data = SCdialogs.SCform_dialog(title='New patient', fields = fields)
     if data != None:
-        return Patient(**data)
+        return Patient(data)
 
 def create_new_EOW():
     new_patient = create_new_patient()
