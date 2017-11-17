@@ -188,13 +188,13 @@ class Sentinel_Dx(Base):
 
     id = Column(Integer, Sequence('user_id_seq'), primary_key=True)
     episode_work_id = Column(Integer, ForeignKey('episode_work.id'))
-    icdcode_id =  = Column(Integer, ForeignKey('icdcode.id'))
+    icdcode_id = Column(Integer, ForeignKey('icdcode.id'))
     predicted_dx = Column(String)
     final_dx = Column(String)
 
     # RELATIONSHIPS
     episode_work = relationship("Episode_Work", order_by='Episode_Work.id', back_populates = 'sentinel_dx')
-    icdcode =  = relationship("ICDCode", back_populates = 'sentinel_dx')
+    icdcode = relationship("ICDCode", back_populates = 'sentinel_dx')
 
     def __repr__(self):
         return "<Sentinel_Dx(id = '%s')>"%(self.id)
@@ -204,7 +204,7 @@ class Notes(Base):
 
     id = Column(Integer, Sequence('user_id_seq'), primary_key=True)
     content = Column(String)
-    image = Column(string)
+    image = Column(String)
     dateCreated = Column(DateTime, default=datetime.utcnow(), nullable=False)
     dateModified = Column(DateTime, default=datetime.utcnow(), nullable=False)
     act_id = Column(Integer, ForeignKey('act.id'))
