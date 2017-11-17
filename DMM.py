@@ -4,10 +4,12 @@ from sqlalchemy import create_engine, Table, Text, distinct
 from sqlalchemy.orm import sessionmaker, relationship, scoped_session
 from sqlalchemy.ext.declarative import declarative_base
 from cryptography.fernet import Fernet
-import time
+import time, SCdialogs, platform
 from random import randint
 from csvloader import populate
 
+if not platform.system().startswith('iP'):
+    import pandas as pd
 # #############################################################
 # import base64, os
 # from cryptography.hazmat.backends import default_backend
@@ -133,7 +135,8 @@ class Act(Base):
 
     def __init__(self, values):
         for k, v in values.items():
-            setattr(self, k, v)
+            if k in self.__table__.columns.keys()
+                setattr(self, k, v)
         session.add(self)
         session.commit()
 
@@ -184,6 +187,9 @@ class Episode_Work(Base):
 
     def is_active(self):
         return self.timeEnd == None
+
+    def get_dic(self):
+        return {'Started':self.timeStart, 'Diagnosis':self.sentinel_dx[0]}
 
     def __repr__(self):
         patient = self.patient.get_decrypted_dic()
@@ -256,35 +262,198 @@ class Patient(Base):
         EOW = Episode_Work(self)
         EOW.add_act()
 
+    def display_overview(self):
+        # dic = self.get_decrypted_dic()
+        # #can use list comprehension:
+        # #list(x.get_dic() for x in self.episode_work)
+        # #  or can map() with labmda
+        # #  getdic = lambda x:x.get_dic()
+        # #  EOW = list(map(getdic, self.episode_work))
+        # EOW = list(x.get_dic() for x in self.episode_work)
+        v = Cards([self] + self.episode_work)
+        v.present('sheet')
+
     def __str__(sefl):
         return "{} {}, MRN: {}, RAMQ: {}".format(self.fname, self.lname, self.mrn, self.ramq)
 
     def __repr__(self):
         return "{}".format(self.fname)
 
+#####################################
+# VIEW CLASSES
 class PatientLists(object):
 
-    def __init__(self, EOWs):
-        self.EOWs = EOWs # a list of episodes of work
+    def __init__(self, view):
+        self.table= ui.TableView()
+        self.items = self.get_items()
+        self.data = ui.ListDataSource(items)
+        self.table.delegate = self.table.data_source = self.data
+        self.table.frame = view.frame
+        self.data.action = self.add_act
+        self.data.accessory_action = self.
+        self.data.edit_action = self.show_patient_overview
+
+    def get_items(self):
+        return session.query(Episode_Work).filter_by(timeEnd = None).all()
+
+    def add_act(self, sender):
+        #add_followup_act()
+        pass
+
+    def mark_completed(self, sender):
+        selected_EOW = sender.items[sender.selected_row]
+        selected_EOW.mark_completed()
+        consol.hud_alert("EOW completed", 0.35)
+        sender.items.remove(selected_act)
+
+    def show_patient_overview(self, sender):
+        patient = sender.item[sender.selected_row].patient
+        patient.display_overview()
+
+class ActiveConsultsList(object):
+
+    def __init__(self, view):
+        self.table= ui.TableView()
+        self.items = self.get_items()
+        self.data = ui.ListDataSource(items)
+        self.table.delegate = self.table.data_source = self.data
+        self.table.frame = view.frame
+        self.data.action = self.mark_completed
+        self.data.accessory_action = self.
+
+    def get_items(self):
+        return session.query(Act).filter_by(timeEnd = None).all()
+
+    def mark_completed(self, sender):
+        selected_act = sender.items[sender.selected_row]
+        selected_act.mark_completed()
+        consol.hud_alert("Act marked completed", 0.30)
+        sender.items.remove(selected_act)
+
+class Cards(ui.View):
+    def __init__(self, elements):
+        # This will also be called without arguments when the view is loaded from a UI file.
+        # You don't have to call super. Note that this is called *before* the attributes
+        # defined in the UI file are set. Implement `did_load` to customize a view after
+        # it's been fully loaded from a UI file.
+
+        # assumes list_todisplay is a list of dictionary of values to be displayed
+        # as minicards
+        self.width = 375 # OPTIMIZE: set widh and height variables as global at top
+        self.height = 667
+        self.frame = (0, 0, self.width, self.height)
+        self.elements = elements
+        spacing = 70
+        cardsize = 50
+        self.background_color = 'white'
+        self.scroll = ui.ScrollView()
+        self.scroll.flex = 'WH'
+        self.scroll.frame = (0, 0, self.width, self.height)
+        self.scroll.content_size = (self.width, spacing*len(elements))
+        for n, data in enumerate(self.elements):
+            card = self.make_card(data)
+            if n == 0:
+                card.frame = (0, 0, self.width, cardsize)
+            else:
+                card.frame = (0, n*spacing, self.width, cardsize)
+            self.scroll.add_subview(card)
+        self.add_subview(self.scroll)
+
+    def make_card(self, data):
+        l = ui.Label()
+        l.text = data.__repr__()
+        l.background_color = 0.88
+        return l
+
+    def did_load(self):
+        # This will be called when a view has been fully loaded from a UI file.
+        pass
+
+    def will_close(self):
+        # This will be called when a presented view is about to be dismissed.
+        # You might want to save data here.
+        pass
+
+    def draw(self):
+        # This will be called whenever the view's content needs to be drawn.
+        # You can use any of the ui module's drawing functions here to render
+        # content into the view's visible rectangle.
+        # Do not call this method directly, instead, if you need your view
+        # to redraw its content, call set_needs_display().
+        # Example:
+        # path = ui.Path.oval(0, 0, self.width, self.height)
+        # ui.set_color('red')
+        # path.fill()
+        # img = ui.Image.named('ionicons-beaker-256')
+        # img.draw(0, 0, self.width, self.height)
+        pass
+
+    def layout(self):
+        # This will be called when a view is resized. You should typically set the
+        # frames of the view's subviews here, if your layout requirements cannot
+        # be fulfilled with the standard auto-resizing (flex) attribute.
+        pass
+
+    def touch_began(self, touch):
+        # Called when a touch begins.
+        pass
+
+    def touch_moved(self, touch):
+        # Called when a touch moves.
+        pass
+
+    def touch_ended(self, touch):
+        # Called when a touch ends.
+        pass
+
+    def keyboard_frame_will_change(self, frame):
+        # Called when the on-screen keyboard appears/disappears
+        # Note: The frame is in screen coordinates.
+        pass
+
+    def keyboard_frame_did_change(self, frame):
+        # Called when the on-screen keyboard appears/disappears
+        # Note: The frame is in screen coordinates.
+        pass
 
 #####################################
 def get_act_data(EOW, patient_id):
-    process = dialogs()
-    data['EOW_id'] = EOW.id
-    data['patient_id'] = patient_id
-    data['billingcode_id'] = get_billingcode(**process[billingsection])
-    data['facility_id'] = get_facility(**process[facility])
-    data['inpt'] = process['inpt']
-    data['secteur_id'] = get_secteur(**process[secteur])
-    data['bed'] = process['bed']
-    return data
+    fields = [{'type':'segmented','key':'facility' ,'value':'HPB|ICM|PCV' ,'title':'Facility'},
+              {'type':'segmented','key':'abbreviation' ,'value':'VP|C|TW|VC' ,'title':'Abbreviation'},
+              {'type':'segmented','key':'location' ,'value':'CHCD|Cprive' ,'title':'Location'},
+              {'type':'segmented','key':'category' ,'value':'ROUT|MIEE' ,'title':'Category'},
+              {'type':'switch','key':'is_inpt' ,'value':True ,'title':'Is Inpatient'},
+              {'type':'number','key':'bed' ,'value':'' ,'title':'Bed'},
+              {'type':'text','key':'secteur' ,'value':'' ,'title':'Secteur'}]
+    process = SCdialogs.SCform_dialog(title = 'New Act', fields = fields)
+    process['EOW_id'] = EOW.id
+    process['patient_id'] = patient_id
+    process['billingcode_id'] = get_billingcode(process).id
+    process['facility_id'] = get_facility(process).id
+    #process['secteur_id'] = get_secteur(process)
+    return process
 
 def create_new_patient():
-    return Patient(**dialogs())
+    fields = [{'type':'text','key':'fname' ,'value':'' ,'title':'First Name'},
+              {'type':'text','key':'lname' ,'value':'' ,'title':'Last Name'},
+              {'type':'text','key':'ramq' ,'value':'' ,'title':'RAMQ'},
+              {'type':'text','key':'mrn' ,'value':'' ,'title':'MRN'},
+              {'type':'date','key':'dob' ,'value':'' ,'title':'Date of birth'},
+              {'type':'number','key':'phone' ,'value':'' ,'title':'Phone'},
+              {'type':'text','key':'postalcode' ,'value':'' ,'title':'Postal Code'}]
+    return Patient(**dialogs(title='New patient', fields = fields))
 
 def create_new_EOW():
     EOW = Episode_Work(create_new_patient())
     EOW.add_act()
+
+def get_billingcode(criteria):
+    return session.query(BillingCode).filter_by(abbreviation = criteria['abbreviation'],\
+                                                location = criteria['location'],\
+                                                category = criteria['category']).first()
+def get_facility(criteria):
+    #may need to indicate facility as a tupple (hospital,secteur) see RAMQ
+    return session.query(Facility).filter_by(abbreviation = criteria['facility']).first()
 #####################################
 # def create_act(EOW, patient):
 #     act_data = get_act_data(EOW, patient)
@@ -320,12 +489,19 @@ def build_dummy():
     for p in patients:
         Patient(dict(zip(headings, p)))
 
+def build_empty_db():
+    try:
+        if platform.system().startswith('iP'):
+            raise ValueError("You are running on IOS")
+        df = pd.read_csv('Model/Billingcodes.csv')
+        Base.metadata.create_all(engine)
+        df.to_sql('BillingCode, engine')
+    except ValueError as msg:
+        print(msg)
+        print("Databases were not created and not populated. Run on Mac")
+
 
 #####################################
 
 if __name__ == '__main__':
-    Base.metadata.create_all(engine)
-    populate()
-    #Base.metadata.create_all(dynamic_engine)
-    # remove after testing phase
-    build_dummy()
+    pass
