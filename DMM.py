@@ -339,12 +339,12 @@ def get_act_billing(criteria):
     cat = criteria['category']
     billingcode = session.query(BillingCode).\
                 filter_by(abbreviation = abb, location = loc, category = cat).first()
-    return (billingcode, abb, loc, cat)
+    return str(billingcode.code) +','+ abb +','+ loc +','+ cat
 
 def get_facility_secteur(criteria):
     #may need to indicate facility as a tupple (hospital,secteur) see RAMQ
     facility = session.query(Facility).filter_by(abbreviation = criteria['facility']).first().ramqnumber
-    secteur =  session.query(Facility).filter_by(abbreviation = criteria['secteur']).first().ramqnumber
+    secteur =  session.query(Secteur).filter_by(abbreviation = criteria['secteur']).first().ramqnumber
     return facility +','+ secteur
 
 #####################################
