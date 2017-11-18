@@ -20,7 +20,7 @@ class BillingCode(Base):
   __tablename__ = 'billingcode'
 
   id = Column(Integer, Sequence('user_id_seq'), unique=True, primary_key=True)
-  code = Column(Integer)
+  code = Column(String)
   abbreviation = Column(String(2))
   description = Column(String)
   fee = Column(Float(5))
@@ -156,7 +156,7 @@ class Episode_Work(Base):
         self.lastEdit = self.timeStart
         session.commit()
 
-    def add_act(self):
+    def add_act(self, **values):
         act = Act(**values)
         session.add(act)
         session.commit()
