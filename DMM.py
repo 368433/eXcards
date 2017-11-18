@@ -6,7 +6,6 @@ from sqlalchemy.ext.declarative import declarative_base
 import time, platform
 from random import randint
 
-##TO IMPLEMENT: when closing app or script, run session.close()
 
 #############################################################
 # ENGINE initialization
@@ -158,7 +157,7 @@ class Episode_Work(Base):
         session.commit()
 
     def add_act(self):
-        act = Act(get_act_data(self, self.patient_id))
+        act = Act(**values)
         session.add(act)
         session.commit()
 
@@ -346,7 +345,7 @@ def get_facility_secteur(criteria):
     #may need to indicate facility as a tupple (hospital,secteur) see RAMQ
     facility = session.query(Facility).filter_by(abbreviation = criteria['facility']).first().ramqnumber
     secteur =  session.query(Facility).filter_by(abbreviation = criteria['secteur']).first().ramqnumber
-    return (facility, secteur)
+    return facility +','+ secteur
 
 #####################################
 

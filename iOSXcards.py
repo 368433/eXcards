@@ -151,20 +151,19 @@ class Cards(ui.View):
 #####################################
 # HELPER FUNCTIONS
 def get_act_data(EOW, patient):
-    actkeys = Act().__table__.column.keys()
+    actkeys = Act().__table__.columns.keys()
     fields = [{'type':'segmented','key':'facility' ,'value':'HPB|ICM|PCV' ,'title':'Facility'},
               {'type':'segmented','key':'abbreviation' ,'value':'VP|C|TW|VC' ,'title':'Abbreviation'},
               {'type':'segmented','key':'location' ,'value':'CHCD|Cprive' ,'title':'Location'},
               {'type':'segmented','key':'category' ,'value':'ROUT|MIEE' ,'title':'Category'},
               {'type':'switch','key':'is_inpt' ,'value':True ,'title':'Is Inpatient'},
               {'type':'number','key':'bed' ,'value':'' ,'title':'Bed'},
-              {'type':'text','key':'secteur' ,'value':'' ,'title':'Secteur'}]
+              {'type':'segmented','key':'secteur' ,'value':'ClinExt|GenWard' ,'title':'Secteur'}]
     process = SCdialogs.SCform_dialog(title = 'New Act', fields = fields)
     process['EOW_id'] = EOW.id
     process['patient_id'] = patient.id
     process['billingcode'] = get_act_billing(process)
-    process['facility_id'] = get_facility(process).id
-    #process['secteur_id'] = get_secteur(process)
+    process['facility_secteur'] = get_facility_secteur(process)
     return process
 
 def create_new_patient():
@@ -177,13 +176,13 @@ def create_new_patient():
               {'type':'text','key':'postalcode' ,'value':'' ,'title':'Postal Code'}]
     data = SCdialogs.SCform_dialog(title='New patient', fields = fields)
     if data != None:
-        return Patient(data)
+        return Patient(**data)
 
 def create_new_EOW():
     new_patient = create_new_patient()
     if new_patient != None:
     	EOW = Episode_Work(new_patient)
-    	EOW.add_act()
+    	EOW.add_act(**get_act_data(EOW, new_patient))
     # except :
     # 	console.hud_alert("Could not create patient", 'success', 0.5)
 
@@ -204,8 +203,15 @@ def parsemainview(sender):
     	sender.selected_index = -1
     	create_new_EOW()
 
+class frontView (ui.View):
+	def will_close(self):
+		session.commit()
+		session.close()
+		print("got here")
+		
 if __name__ == '__main__':
     v = ui.load_view('category')
+    print(type(v))
     v['segmentedcontrol1'].selected_index = -1
     v['segmentedcontrol1'].action = parsemainview
     v['segmentedcontrol1'].selected_index = -1
