@@ -44,11 +44,10 @@ class Facility(Base):
     __tablename__="facility"
 
     id = Column(Integer, Sequence('user_id_seq'), unique=True, primary_key=True)
-    name = Column(String)
     abbreviation = Column(String)
     postal_code = Column(String(6))
     phone = Column(String(10))
-    address =  Column(String)
+    ramqnumber = Column(String)
 
     def __repr__(self):
         return "Facility(id='{}', name = '{}', phone='{}')".format(self.id, self.name, self.phone) # done
