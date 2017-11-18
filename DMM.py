@@ -30,9 +30,8 @@ class BillingCode(Base):
   def get_billingcode(self):
       return self.code
 
-  def __repr__(self):
-      return "<BillingCode(id='%s', abbreviation = '%s', code='%s', description='%s', fee='%s')>" % (
-                          self.id, self.abbreviation, self.code, self.description, self.fee) # done
+  def get_billingfee(self):
+      return self.fee
 
 class Facility(Base):
     """
@@ -51,17 +50,18 @@ class Facility(Base):
     address =  Column(String)
 
     def __repr__(self):
-        return "<Facility(id='%s', name = '%s', phone='%s')>" % (self.id, self.name, self.phone) # done
+        return "Facility(id='{}', name = '{}', phone='{}')".format(self.id, self.name, self.phone) # done
 
 class Secteur(Base):
     __tablename__="secteur"
 
     id = Column(Integer, Sequence('user_id_seq'), unique=True, primary_key=True)
+    abbreviation = Column(String)
     name = Column(String)
     ramqnumber = Column(String)
 
     def __repr__(self):
-        return "<Secteur(id='%s', name = '%s', abbr='%s')>" % (self.id, self.name, self.abbreviation)
+        return "Secteur(id='{}', name = '{}', abbr='{}')".format(self.id, self.name, self.abbreviation)
 
 class Physician(Base):
     __tablename__="physician"
@@ -76,7 +76,7 @@ class Physician(Base):
 
 
     def __repr__(self):
-        return "<physician(id={}, license ={}, first name = {}, last name = {})>".format(self.id, self.license, self.fname, self.lname)
+        return "physician(id={}, license ={}, first name = {}, last name = {})".format(self.id, self.license, self.fname, self.lname)
 
 class ICDCode(Base):
     __tablename__="icdcode"
@@ -89,7 +89,7 @@ class ICDCode(Base):
     sentinel_dx = relationship("Sentinel_Dx", back_populates = 'icdcode')
 
     def __repr__(self):
-        return "<ICD(id={}, code={}, description={})>".format(self.id, self.code, self.description)
+        return "ICD(id={}, code={}, description={})".format(self.id, self.code, self.description)
 
 #####################################
 # DYNAMIC
@@ -100,8 +100,8 @@ class Act(Base):
     timeStart = Column(DateTime, default=datetime.utcnow(), nullable=False)
     timeEnd = Column(DateTime)
     bed = Column(String(5))
-    num_secteur = Column(String(5)) #XXXXd
-    num_facility = Column(String(5)) #ddddX
+    facility_secteur = Column(String(5)) #(ddddX,XXXXd)
+    #num_facility = Column(String(5)) #ddddX
     billingcode = Column(String) # a tuple of (code,abbrv,loc,cat)
     #BOOLEANS
     was_billed = Column(Boolean, default=False)
@@ -128,7 +128,7 @@ class Act(Base):
         return self.timeEnd == None
 
     def __repr__(self):
-        return "<Act(id='%s', timeStart='%s', billingcode_id='%s')>"%(
+        return "Act(id='{}', timeStart='{}', billingcode_id='{}')".format(
                 self.id, self.timeStart, self.billingcode_id)
 
 class Episode_Work(Base):
@@ -214,7 +214,7 @@ class Sentinel_Dx(Base):
             return 0
 
     def __repr__(self):
-        return "<Sentinel_Dx(id = '%s')>"%(self.id)
+        return "Sentinel_Dx(id = '{}')".format(self.id)
 
 class Notes(Base):
     __tablename__ = 'notes'
@@ -342,9 +342,11 @@ def get_act_billing(criteria):
                 filter_by(abbreviation = abb, location = loc, category = cat).first()
     return (billingcode, abb, loc, cat)
 
-def get_facility(criteria):
+def get_facility_secteur(criteria):
     #may need to indicate facility as a tupple (hospital,secteur) see RAMQ
-    return session.query(Facility).filter_by(abbreviation = criteria['facility']).first()
+    facility = session.query(Facility).filter_by(abbreviation = criteria['facility']).first().ramqnumber
+    secteur =  session.query(Facility).filter_by(abbreviation = criteria['secteur']).first().ramqnumber
+    return (facility, secteur)
 
 #####################################
 

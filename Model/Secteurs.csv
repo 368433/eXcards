@@ -1,18 +1,18 @@
-id,name,ramqnumber
-1,Clinique externe,0XXX1
-2,Section gériatrique,0XXX2
-3,Unité de soins généraux et spéc.,0XXX3
-4,Unité soins longue durée (prolongés),0XXX4
-5,Unité soins longue durée (hébergement),0XXX5
-6,Section psychiatrique,0XXX8
-7,Unité coronarienne,0XXX6/4XXX6
-8,Unité de soins intensifs,0XXX6/4XXX6
-9,Clinique d'urgence,0XXX7
-10,Centre des grands brûlés,None
-11,Unité de réadaptation lourde,None
-12,Unité de réadapt. fonct. intensive,0XXX3
-13,Centre de douleur chronique,4XXX1
-14,Unité de soins de néonatalogie,None
-15,Unité d'hépatologie,None
-16,Unité de décision clinique,None
-17,None,None
+id,abbreviation,name,ramqnumber
+1,ClinExt,Clinique externe,0XXX1
+2,Geri,Section gériatrique,0XXX2
+3,GenWard,Unité de soins généraux et spéc.,0XXX3
+4,LTC,Unité soins longue durée (prolongés),0XXX4
+5,LTC,Unité soins longue durée (hébergement),0XXX5
+6,Psyc,Section psychiatrique,0XXX8
+7,CCU,Unité coronarienne,0XXX6/4XXX6
+8,ICU,Unité de soins intensifs,0XXX6/4XXX6
+9,EmergClin,Clinique d'urgence,0XXX7
+10,Burn,Centre des grands brûlés,None
+11,Rehab,Unité de réadaptation lourde,None
+12,Rehab,Unité de réadapt. fonct. intensive,0XXX3
+13,Pain,Centre de douleur chronique,4XXX1
+14,NeoNat,Unité de soins de néonatalogie,None
+15,Hepato,Unité d'hépatologie,None
+16,Decision,Unité de décision clinique,None
+17,Nne,None,None
