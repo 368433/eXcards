@@ -113,6 +113,7 @@ class Act(Base):
     episode_work = relationship("Episode_Work", back_populates="act")
     notes = relationship("Notes", order_by = "desc(Notes.dateCreated)", back_populates='act')
     reminders = relationship("Reminders", back_populates="act")
+    patient = relationship("Patient", back_populates = "acts")
 
     def __init__(self, **values):
         set_values(self, **values)
@@ -127,8 +128,7 @@ class Act(Base):
         return self.timeEnd == None
 
     def __repr__(self):
-        return "Act(id='{}', timeStart='{}', billingcode_id='{}')".format(
-                self.id, self.timeStart, self.billingcode_id)
+        return "{0};Date:{1};Patient:{2})".format(self.billingcode, self.timeStart, self.patient)
 
 class Episode_Work(Base):
     # equivalent to Card
@@ -282,7 +282,7 @@ class Patient(Base):
     # RELATIONSHIPS
     episode_work = relationship("Episode_Work", order_by = Episode_Work.id, back_populates = "patient")
     reminders = relationship("Reminders", order_by = "desc(Reminders.dateCreated)", back_populates = "patient")
-
+    acts = relationship("Act", order_by = "desc(Act.timeStart)", back_populates = "patient")
     def __init__(self, **values):
         if values:
             set_values(self, **values)
