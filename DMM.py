@@ -6,6 +6,7 @@ from sqlalchemy.ext.declarative import declarative_base
 import time, platform
 from random import randint
 
+##TO IMPLEMENT: when closing app or script, run session.close()
 
 #############################################################
 # ENGINE initialization
