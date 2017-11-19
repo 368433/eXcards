@@ -1,7 +1,7 @@
 import pandas as pd
 from cryptography.fernet import Fernet
 import sqlalchemy
-from DMM import *
+from DMM1 import *
 
 #############################################################
 # password key to encrypt and decrypt Patient entries
